@@ -17,7 +17,7 @@ export function Navigation() {
         { name: 'PORTFOLIO', path: '/' },
         { name: 'GALLERY', path: '/gallery' },
         { name: 'BOOK', path: '/booking' },
-        { name: 'ABOUT', path: '#' },
+        { name: 'LOGIN', path: '/login' },
     ];
 
     return (
