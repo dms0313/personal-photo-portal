@@ -5,6 +5,7 @@ import { Navigation } from './components/Navigation'
 import { BookingPage } from './pages/BookingPage'
 import { GalleryPage } from './pages/GalleryPage'
 import { Home } from './pages/Home'
+import { LoginPage } from './pages/LoginPage'
 
 function App() {
   return (
@@ -16,6 +17,7 @@ function App() {
           <Route path="/" element={<Home />} />
           <Route path="/gallery" element={<GalleryPage />} />
           <Route path="/booking" element={<BookingPage />} />
+          <Route path="/login" element={<LoginPage />} />
         </Routes>
       </main>
 
