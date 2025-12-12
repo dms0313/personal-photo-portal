@@ -2,18 +2,11 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { useState } from 'react'
 import { createPortal } from 'react-dom'
 
-// Placeholder images from Unsplash
-const PHOTOS = [
-    'https://images.unsplash.com/photo-1494783367193-149034c05e8f?auto=format&fit=crop&q=80',
-    'https://images.unsplash.com/photo-1554080353-a576cf803bda?auto=format&fit=crop&q=80',
-    'https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&q=80',
-    'https://images.unsplash.com/photo-1501854140884-074bf6b24363?auto=format&fit=crop&q=80',
-    'https://images.unsplash.com/photo-1472214103451-9374bd1c798e?auto=format&fit=crop&q=80',
-    'https://images.unsplash.com/photo-1469474968028-56623f02e42e?auto=format&fit=crop&q=80',
-]
+import { useGalleryStore } from '../lib/galleryStore'
 
 export const Gallery = () => {
     const [selectedImage, setSelectedImage] = useState<string | null>(null)
+    const photos = useGalleryStore((state) => state.photos)
 
     return (
         <section className="py-20 px-4">
@@ -28,25 +21,29 @@ export const Gallery = () => {
                 </motion.h2>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                    {PHOTOS.map((src, index) => (
+                    {photos.map((photo, index) => (
                         <motion.div
-                            key={index}
+                            key={photo.id}
                             initial={{ opacity: 0, scale: 0.9 }}
                             whileInView={{ opacity: 1, scale: 1 }}
                             viewport={{ once: true }}
                             transition={{ delay: index * 0.1 }}
                             className="relative aspect-[4/5] overflow-hidden rounded-xl cursor-pointer group"
-                            onClick={() => setSelectedImage(src)}
+                            onClick={() => setSelectedImage(photo.url)}
                         >
                             <motion.img
-                                src={src}
-                                alt={`Photo ${index + 1}`}
+                                src={photo.url}
+                                alt={photo.title}
                                 className="w-full h-full object-cover"
                                 whileHover={{ scale: 1.05 }}
                                 transition={{ duration: 0.4 }}
                             />
-                            <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
-                                <span className="text-white text-lg font-medium tracking-wide border border-white/50 px-4 py-2 rounded-full backdrop-blur-sm">View</span>
+                            <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-4 gap-2">
+                                <span className="text-white text-lg font-semibold tracking-wide">{photo.title}</span>
+                                <p className="text-gray-200 text-sm leading-snug line-clamp-2">{photo.description}</p>
+                                <span className="self-start mt-1 text-white text-xs font-medium border border-white/50 px-3 py-1 rounded-full backdrop-blur-sm">
+                                    View
+                                </span>
                             </div>
                         </motion.div>
                     ))}
