@@ -11,7 +11,7 @@ export function Home() {
         offset: ["start start", "end end"]
     })
 
-    const y = useTransform(scrollYProgress, [0, 1], ["0%", "50%"])
+
 
     return (
         <div ref={containerRef} className="relative">

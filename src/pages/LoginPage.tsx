@@ -20,7 +20,7 @@ export function LoginPage() {
     const [imageUrl, setImageUrl] = useState('')
     const [bulkUrls, setBulkUrls] = useState('')
 
-    const { login, logout, isAuthenticated, loginError, ownerEmail, hasConfiguredPasscode } = useAuthStore()
+    const { login, logout, isAuthenticated, loginError, ownerEmail } = useAuthStore()
     const { photos, addPhoto, updatePhoto } = useGalleryStore()
 
     useEffect(() => {

@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Link } from 'react-router-dom';
-import { FiChevronDown, FiClock, FiMapPin, FiCamera, FiCalendar, FiBriefcase, FiHeart } from 'react-icons/fi';
+import { FiChevronDown, FiCamera, FiCalendar, FiBriefcase, FiHeart } from 'react-icons/fi';
 import { FaDog } from 'react-icons/fa';
 
 const services = [
