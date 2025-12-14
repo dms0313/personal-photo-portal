@@ -1,15 +1,11 @@
 import { useRef } from 'react'
-import { motion, useScroll, useTransform } from 'framer-motion'
+import { motion } from 'framer-motion'
 import { Link } from 'react-router-dom'
 import { FiArrowDown } from 'react-icons/fi'
 import { Gallery } from '../components/Gallery'
 
 export function Home() {
     const containerRef = useRef(null)
-    const { scrollYProgress } = useScroll({
-        target: containerRef,
-        offset: ["start start", "end end"]
-    })
 
 
 
