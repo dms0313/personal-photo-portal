@@ -17,13 +17,7 @@ export function Home() {
         <div ref={containerRef} className="relative">
             {/* Hero Section */}
             <section className="h-screen flex flex-col justify-center items-center relative overflow-hidden">
-                <motion.div
-                    style={{ y }}
-                    className="absolute inset-0 z-0 opacity-30"
-                >
-                    <div className="absolute top-[-20%] left-[-10%] w-[50%] h-[50%] bg-purple-600 rounded-full blur-[120px]" />
-                    <div className="absolute bottom-[-20%] right-[-10%] w-[50%] h-[50%] bg-blue-600 rounded-full blur-[120px]" />
-                </motion.div>
+                {/* Background is now global in App.tsx */}
 
                 <div className="z-10 text-center px-4 flex flex-col items-center">
                     <motion.div
@@ -75,14 +69,19 @@ export function Home() {
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     transition={{ delay: 1, duration: 1 }}
-                    className="absolute bottom-12 animate-bounce"
+                    className="absolute bottom-12 animate-bounce cursor-pointer z-20"
+                    onClick={() => {
+                        document.getElementById('featured-gallery')?.scrollIntoView({ behavior: 'smooth' });
+                    }}
                 >
-                    <FiArrowDown className="w-6 h-6 text-gray-500" />
+                    <FiArrowDown className="w-6 h-6 text-gray-500 hover:text-white transition-colors" />
                 </motion.div>
             </section>
 
-            {/* Preview Gallery Section */}
-            <Gallery />
+            {/* Preview Gallery Section - Only Featured */}
+            <div id="featured-gallery">
+                <Gallery featuredOnly={true} />
+            </div>
         </div>
     )
 }

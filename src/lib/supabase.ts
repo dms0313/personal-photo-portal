@@ -19,6 +19,8 @@ export interface PhotoRecord {
     description: string | null
     created_at: string
     display_order: number
+    is_featured?: boolean
+    category?: string
 }
 
 export const photosTable = {

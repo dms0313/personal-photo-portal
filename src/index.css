@@ -10,17 +10,24 @@
 
 :root {
   /* Default to Dark Mode aesthetics directly */
-  --background: #0a0a0a;
+  --background: transparent;
+  /* Changed to transparent for fixed bg */
   --foreground: #ededed;
   --primary: #ffffff;
   --accent: #3b82f6;
-  /* Will use gradients mostly */
   --muted: #262626;
 
   color-scheme: dark;
 }
 
 @layer base {
+
+  html,
+  body,
+  #root {
+    @apply relative h-full;
+  }
+
   body {
     @apply bg-background text-foreground antialiased;
     font-feature-settings: "rlig" 1, "calt" 1;
@@ -67,43 +74,34 @@
 }
 
 /* Custom Cursor */
-* {
-  cursor: none !important;
+/* Custom Cursor - Desktop Only */
+@media (min-width: 768px) {
+  * {
+    cursor: none !important;
+  }
+
+  .custom-cursor {
+    pointer-events: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 9999;
+  }
+
+  .cursor-dot {
+    width: 12px;
+    height: 12px;
+    background: linear-gradient(to right, #60a5fa, #a855f7, #ec4899);
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+  }
 }
 
-.custom-cursor {
-  pointer-events: none;
-  position: fixed;
-  top: 0;
-  left: 0;
-  z-index: 9999;
-  mix-blend-mode: difference;
-}
-
-.cursor-dot {
-  width: 8px;
-  height: 8px;
-  background: white;
-  border-radius: 50%;
-  transform: translate(-50%, -50%);
-  /* CRITICAL: No transition here to prevent input lag */
-}
-
-.cursor-ring {
-  width: 32px;
-  height: 32px;
-  border: 1.5px solid rgba(255, 255, 255, 0.8);
-  border-radius: 50%;
-  transform: translate(-50%, -50%);
-  /* CRITICAL: No transform transition here to prevent double-smoothing lag */
-  transition: width 0.2s, height 0.2s, background-color 0.2s, border-color 0.2s;
-}
-
-.cursor-ring.hovering {
-  width: 48px;
-  height: 48px;
-  border-color: rgba(255, 255, 255, 0.4);
-  background: rgba(255, 255, 255, 0.1);
+/* Hide on mobile (explicit safety) */
+@media (max-width: 767px) {
+  .custom-cursor {
+    display: none;
+  }
 }
 
 /* Intro Animation Keyframes */

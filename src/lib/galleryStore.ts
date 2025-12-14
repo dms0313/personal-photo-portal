@@ -6,6 +6,8 @@ export interface GalleryPhoto {
   url: string
   title: string
   description: string
+  is_featured: boolean
+  category: string
 }
 
 interface GalleryState {
@@ -13,8 +15,8 @@ interface GalleryState {
   isLoading: boolean
   error: string | null
   fetchPhotos: () => Promise<void>
-  addPhoto: (photo: Omit<GalleryPhoto, 'id'>) => Promise<boolean>
-  updatePhoto: (id: string, updates: Partial<Pick<GalleryPhoto, 'title' | 'description'>>) => Promise<boolean>
+  addPhoto: (photo: Omit<GalleryPhoto, 'id' | 'is_featured' | 'category'> & { category?: string }) => Promise<boolean>
+  updatePhoto: (id: string, updates: Partial<Pick<GalleryPhoto, 'title' | 'description' | 'is_featured' | 'category'>>) => Promise<boolean>
   deletePhoto: (id: string) => Promise<boolean>
 }
 
@@ -23,6 +25,8 @@ const mapRecordToPhoto = (record: PhotoRecord): GalleryPhoto => ({
   url: record.url,
   title: record.title,
   description: record.description || '',
+  is_featured: record.is_featured ?? false,
+  category: record.category || 'people', // Default category
 })
 
 export const useGalleryStore = create<GalleryState>((set, get) => ({
@@ -48,6 +52,8 @@ export const useGalleryStore = create<GalleryState>((set, get) => ({
       title: photo.title,
       description: photo.description || null,
       display_order: get().photos.length,
+      is_featured: false,
+      category: photo.category || 'people',
     })
 
     if (record) {

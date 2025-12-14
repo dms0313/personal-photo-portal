@@ -8,9 +8,14 @@ import { GalleryPage } from './pages/GalleryPage'
 import { Home } from './pages/Home'
 import { LoginPage } from './pages/LoginPage'
 
+import { ServicesPage } from './pages/ServicesPage'
+
+import { Background } from './components/Background'
+
 function App() {
   return (
-    <div className="relative flex min-h-screen flex-col overflow-x-hidden bg-background text-foreground">
+    <div className="relative flex min-h-screen flex-col overflow-x-hidden bg-transparent text-foreground">
+      <Background />
       <CustomCursor />
       <Navigation />
 
@@ -18,6 +23,7 @@ function App() {
       <main className="flex-grow">
         <Routes>
           <Route path="/" element={<Home />} />
+          <Route path="/services" element={<ServicesPage />} />
           <Route path="/gallery" element={<GalleryPage />} />
           <Route path="/booking" element={<BookingPage />} />
           <Route path="/login" element={<LoginPage />} />
@@ -25,7 +31,7 @@ function App() {
       </main>
 
       {/* Footer */}
-      <footer className="border-t border-white/5 bg-black/50 py-12 backdrop-blur-lg">
+      <footer className="py-12">
         <div className="mx-auto flex max-w-4xl flex-col items-center gap-6 px-4">
           <div className="flex gap-8">
             <a href="#" className="group rounded-full p-3 transition-colors hover:bg-white/10">

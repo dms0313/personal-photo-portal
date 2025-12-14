@@ -5,18 +5,23 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
+    "dev:api": "npx vercel dev --listen 0.0.0.0:3000",
     "build": "tsc -b && vite build",
     "lint": "eslint .",
     "preview": "vite preview",
     "format": "prettier --write \"src/**/*.{ts,tsx,css,md}\""
   },
   "dependencies": {
+    "@supabase/supabase-js": "^2.45.0",
     "@tailwindcss/forms": "^0.5.10",
     "@tailwindcss/typography": "^0.5.19",
     "@tailwindcss/vite": "^4.1.17",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "framer-motion": "^12.23.26",
+    "googleapis": "^168.0.0",
+    "idb-keyval": "^6.2.1",
+    "imagekitio-react": "^4.2.0",
     "lucide-react": "^0.556.0",
     "pnpm": "^10.25.0",
     "react": "^19.2.0",
@@ -25,10 +30,7 @@
     "react-router-dom": "^7.10.1",
     "tailwind-merge": "^3.4.0",
     "tailwindcss": "^4.1.17",
-    "zustand": "^5.0.9",
-    "idb-keyval": "^6.2.1",
-    "imagekitio-react": "^4.2.0",
-    "@supabase/supabase-js": "^2.45.0"
+    "zustand": "^5.0.9"
   },
   "devDependencies": {
     "@eslint/js": "^9.39.1",

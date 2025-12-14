@@ -2,20 +2,24 @@ import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Calendar } from '../components/Calendar';
 import { FiCheck } from 'react-icons/fi';
+import { useSearchParams } from 'react-router-dom';
 
 import { fetchBusyDates } from '../lib/googleCalendar';
 
 export function BookingPage() {
+    const [searchParams] = useSearchParams();
     const [selectedDate, setSelectedDate] = useState<Date | null>(null);
     const [blockedDates, setBlockedDates] = useState<Date[]>([]);
     const [formState, setFormState] = useState({
         name: '',
         email: '',
-        message: ''
+        message: '',
+        service: ''
     });
     const [isSubmitted, setIsSubmitted] = useState(false);
+    const [isSubmitting, setIsSubmitting] = useState(false);
 
-    // Fetch busy dates on mount
+    // Fetch busy dates and URL params on mount
     useEffect(() => {
         const loadBusyDates = async () => {
             const now = new Date();
@@ -26,41 +30,56 @@ export function BookingPage() {
             setBlockedDates(busy);
         };
         loadBusyDates();
-    }, []);
 
-    const handleSubmit = (e: React.FormEvent) => {
+        // Auto-fill service from URL
+        const serviceParam = searchParams.get('service');
+        if (serviceParam) {
+            setFormState(prev => ({ ...prev, service: serviceParam }));
+        }
+    }, [searchParams]);
+
+    const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         if (!selectedDate) return;
 
-        // --- Google Calendar Integration ---
+        setIsSubmitting(true);
 
-        // 1. Set default time (10:00 AM - 11:00 AM) for the booking slot
+        // 1. Set default time (10:00 AM)
         const startTime = new Date(selectedDate);
         startTime.setHours(10, 0, 0, 0);
-        const endTime = new Date(startTime);
-        endTime.setHours(11, 0, 0, 0);
 
-        // 2. Format for Google Calendar (YYYYMMDDTHHmmSS)
-        const formatGCalDate = (date: Date) => {
-            const pad = (n: number) => n < 10 ? '0' + n : n;
-            return `${date.getFullYear()}${pad(date.getMonth() + 1)}${pad(date.getDate())}T${pad(date.getHours())}${pad(date.getMinutes())}00`;
-        };
+        try {
+            const response = await fetch('/api/create-event', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    name: formState.name,
+                    email: formState.email,
+                    message: `Service: ${formState.service}\n\n${formState.message}`,
+                    date: startTime.toISOString()
+                })
+            });
 
-        // 3. Construct URL
-        const title = encodeURIComponent(`Photo Session: ${formState.name}`);
-        const details = encodeURIComponent(`Client: ${formState.name}\nEmail: ${formState.email}\n\nMessage:\n${formState.message}`);
-        const dates = `${formatGCalDate(startTime)}/${formatGCalDate(endTime)}`;
+            if (!response.ok) {
+                const text = await response.text();
+                let errMsg = 'Booking failed';
+                try {
+                    const err = JSON.parse(text);
+                    errMsg = err.message || errMsg;
+                } catch (e) {
+                    errMsg = `Request failed: ${response.statusText} (${text.slice(0, 100)}...)`;
+                }
+                throw new Error(errMsg);
+            }
 
-        // [Action Required]: Change this to your actual email to receive invites automatically!
-        const photographerEmail = "dms0313@gmail.com";
-
-        const gCalUrl = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${title}&details=${details}&dates=${dates}&add=${photographerEmail}`;
-
-        // 4. Open in new tab
-        window.open(gCalUrl, '_blank');
-
-        // 5. Show success UI
-        setIsSubmitted(true);
+            // Success
+            setIsSubmitted(true);
+        } catch (error: any) {
+            console.error(error);
+            alert(`Error: ${error.message || JSON.stringify(error)}`);
+        } finally {
+            setIsSubmitting(false);
+        }
     };
 
     return (
@@ -104,6 +123,18 @@ export function BookingPage() {
                                         }
                                     </h3>
 
+                                    {/* Service Selection Display */}
+                                    <div>
+                                        <label className="block text-sm font-medium text-gray-400 mb-2">Service Type</label>
+                                        <input
+                                            type="text"
+                                            className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-blue-300 font-semibold focus:outline-none focus:border-purple-500 transition-colors"
+                                            value={formState.service}
+                                            onChange={e => setFormState({ ...formState, service: e.target.value })}
+                                            placeholder="General Inquiry (or select from Services page)"
+                                        />
+                                    </div>
+
                                     <div>
                                         <label className="block text-sm font-medium text-gray-400 mb-2">Name</label>
                                         <input
@@ -138,9 +169,10 @@ export function BookingPage() {
 
                                     <button
                                         type="submit"
-                                        className="w-full py-4 rounded-lg bg-gradient-to-r from-blue-600 to-purple-600 text-white font-bold tracking-wide hover:opacity-90 transition-opacity"
+                                        disabled={isSubmitting}
+                                        className="w-full py-4 rounded-lg bg-gradient-to-r from-blue-600 to-purple-600 text-white font-bold tracking-wide hover:opacity-90 transition-opacity disabled:opacity-50 disabled:cursor-not-allowed"
                                     >
-                                        CONFIRM BOOKING
+                                        {isSubmitting ? 'BOOKING...' : 'CONFIRM BOOKING'}
                                     </button>
                                 </form>
                             ) : (

@@ -1,3 +1,4 @@
+
 import { motion, AnimatePresence } from 'framer-motion'
 import { useState } from 'react'
 import { createPortal } from 'react-dom'
@@ -5,12 +6,19 @@ import { createPortal } from 'react-dom'
 import { useGalleryStore } from '../lib/galleryStore'
 import { useAuthStore } from '../lib/authStore'
 
-export const Gallery = () => {
+export const Gallery = ({ featuredOnly = false, category = 'all' }: { featuredOnly?: boolean; category?: string }) => {
     const [selectedImage, setSelectedImage] = useState<string | null>(null)
     const [confirmDeleteId, setConfirmDeleteId] = useState<string | null>(null)
-    const photos = useGalleryStore((state) => state.photos)
+    const allPhotos = useGalleryStore((state) => state.photos)
     const deletePhoto = useGalleryStore((state) => state.deletePhoto)
     const isAuthenticated = useAuthStore((state) => state.isAuthenticated)
+
+    // Filter photos based on props
+    const photos = allPhotos.filter(p => {
+        if (featuredOnly && !p.is_featured) return false
+        if (category !== 'all' && p.category !== category) return false
+        return true
+    })
 
     const handleDeleteClick = (e: React.MouseEvent, photoId: string) => {
         e.stopPropagation()

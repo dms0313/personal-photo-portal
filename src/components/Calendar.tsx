@@ -69,7 +69,7 @@ export function Calendar({ onDateSelect, selectedDate, blockedDates = [] }: Cale
                         <div key={index} className="flex flex-col">
                             <h3 className="text-lg font-medium text-gray-300 mb-4 text-center">{monthName}</h3>
                             <div className="grid grid-cols-7 gap-1 text-center text-sm mb-2 text-gray-500">
-                                {['S', 'M', 'T', 'W', 'T', 'F', 'S'].map(d => <span key={d}>{d}</span>)}
+                                {['S', 'M', 'T', 'W', 'T', 'F', 'S'].map((d, i) => <span key={i}>{d}</span>)}
                             </div>
                             <div className="grid grid-cols-7 gap-1">
                                 {Array.from({ length: firstDay }).map((_, i) => (
