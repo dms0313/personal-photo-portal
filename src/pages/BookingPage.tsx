@@ -1,10 +1,13 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Calendar } from '../components/Calendar';
 import { FiCheck } from 'react-icons/fi';
 
+import { fetchBusyDates } from '../lib/googleCalendar';
+
 export function BookingPage() {
     const [selectedDate, setSelectedDate] = useState<Date | null>(null);
+    const [blockedDates, setBlockedDates] = useState<Date[]>([]);
     const [formState, setFormState] = useState({
         name: '',
         email: '',
@@ -12,10 +15,52 @@ export function BookingPage() {
     });
     const [isSubmitted, setIsSubmitted] = useState(false);
 
+    // Fetch busy dates on mount
+    useEffect(() => {
+        const loadBusyDates = async () => {
+            const now = new Date();
+            const threeMonthsOut = new Date();
+            threeMonthsOut.setMonth(now.getMonth() + 3);
+
+            const busy = await fetchBusyDates(now, threeMonthsOut);
+            setBlockedDates(busy);
+        };
+        loadBusyDates();
+    }, []);
+
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
-        // Simulate submission
-        setTimeout(() => setIsSubmitted(true), 1000);
+        if (!selectedDate) return;
+
+        // --- Google Calendar Integration ---
+
+        // 1. Set default time (10:00 AM - 11:00 AM) for the booking slot
+        const startTime = new Date(selectedDate);
+        startTime.setHours(10, 0, 0, 0);
+        const endTime = new Date(startTime);
+        endTime.setHours(11, 0, 0, 0);
+
+        // 2. Format for Google Calendar (YYYYMMDDTHHmmSS)
+        const formatGCalDate = (date: Date) => {
+            const pad = (n: number) => n < 10 ? '0' + n : n;
+            return `${date.getFullYear()}${pad(date.getMonth() + 1)}${pad(date.getDate())}T${pad(date.getHours())}${pad(date.getMinutes())}00`;
+        };
+
+        // 3. Construct URL
+        const title = encodeURIComponent(`Photo Session: ${formState.name}`);
+        const details = encodeURIComponent(`Client: ${formState.name}\nEmail: ${formState.email}\n\nMessage:\n${formState.message}`);
+        const dates = `${formatGCalDate(startTime)}/${formatGCalDate(endTime)}`;
+
+        // [Action Required]: Change this to your actual email to receive invites automatically!
+        const photographerEmail = "dms0313@gmail.com";
+
+        const gCalUrl = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${title}&details=${details}&dates=${dates}&add=${photographerEmail}`;
+
+        // 4. Open in new tab
+        window.open(gCalUrl, '_blank');
+
+        // 5. Show success UI
+        setIsSubmitted(true);
     };
 
     return (
@@ -40,6 +85,7 @@ export function BookingPage() {
                         <Calendar
                             selectedDate={selectedDate}
                             onDateSelect={setSelectedDate}
+                            blockedDates={blockedDates}
                         />
                     </div>
 

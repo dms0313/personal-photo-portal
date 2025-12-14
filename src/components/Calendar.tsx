@@ -1,12 +1,14 @@
 import { useState, useMemo } from 'react';
 import { FiChevronLeft, FiChevronRight } from 'react-icons/fi';
 
+// [Modified] Interface to accept blocked dates
 interface CalendarProps {
     onDateSelect: (date: Date) => void;
     selectedDate: Date | null;
+    blockedDates?: Date[]; // New prop
 }
 
-export function Calendar({ onDateSelect, selectedDate }: CalendarProps) {
+export function Calendar({ onDateSelect, selectedDate, blockedDates = [] }: CalendarProps) {
     const [currentMonth, setCurrentMonth] = useState(new Date());
 
     const months = useMemo(() => {
@@ -29,7 +31,6 @@ export function Calendar({ onDateSelect, selectedDate }: CalendarProps) {
 
     const prevMonth = () => {
         const now = new Date();
-        // Prevent going back past current month
         if (currentMonth.getMonth() === now.getMonth() && currentMonth.getFullYear() === now.getFullYear()) return;
         setCurrentMonth(new Date(currentMonth.getFullYear(), currentMonth.getMonth() - 1, 1));
     };
@@ -38,6 +39,11 @@ export function Calendar({ onDateSelect, selectedDate }: CalendarProps) {
         return d1.getDate() === d2.getDate() &&
             d1.getMonth() === d2.getMonth() &&
             d1.getFullYear() === d2.getFullYear();
+    };
+
+    // [New] Helper to check if a date is in the blocked list
+    const isDateBlocked = (date: Date) => {
+        return blockedDates.some(blocked => isSameDay(date, blocked));
     };
 
     return (
@@ -73,16 +79,19 @@ export function Calendar({ onDateSelect, selectedDate }: CalendarProps) {
                                     const date = new Date(monthDate.getFullYear(), monthDate.getMonth(), i + 1);
                                     const isSelected = selectedDate && isSameDay(date, selectedDate);
                                     const isPast = date < new Date(new Date().setHours(0, 0, 0, 0));
+                                    const isBlocked = isDateBlocked(date);
+                                    const isDisabled = isPast || isBlocked;
 
                                     return (
                                         <button
                                             key={i}
-                                            disabled={isPast}
+                                            disabled={isDisabled}
                                             onClick={() => onDateSelect(date)}
                                             className={`
                         aspect-square rounded-full flex items-center justify-center text-sm transition-all
-                        ${isPast ? 'text-gray-700 cursor-not-allowed' : 'hover:bg-white/20 text-gray-200'}
+                        ${isDisabled ? 'text-gray-700 cursor-not-allowed decoration-slice line-through opacity-50' : 'hover:bg-white/20 text-gray-200'}
                         ${isSelected ? 'bg-gradient-to-r from-blue-500 to-purple-600 text-white font-bold shadow-lg scale-110' : ''}
+                        ${isBlocked && !isPast ? 'bg-red-900/20 text-red-500/50' : ''} 
                       `}
                                         >
                                             {i + 1}
