@@ -4,14 +4,7 @@ import { motion } from 'framer-motion'
 
 import { useAuthStore } from '../lib/authStore'
 import { useGalleryStore } from '../lib/galleryStore'
-
-const fileToDataUrl = (file: File) =>
-    new Promise<string>((resolve, reject) => {
-        const reader = new FileReader()
-        reader.onload = () => resolve(reader.result as string)
-        reader.onerror = () => reject(new Error('Unable to read file. Please try another image.'))
-        reader.readAsDataURL(file)
-    })
+import { imagekitConfig, isImageKitUrl, uploadToImageKit } from '../lib/imagekit'
 
 export function LoginPage() {
     const [passcode, setPasscode] = useState('')
@@ -20,7 +13,11 @@ export function LoginPage() {
     const [newTitle, setNewTitle] = useState('')
     const [newDescription, setNewDescription] = useState('')
     const [uploadStatus, setUploadStatus] = useState<string | null>(null)
+    const [isUploading, setIsUploading] = useState(false)
     const [drafts, setDrafts] = useState<Record<string, { title: string; description: string }>>({})
+    const [uploadMode, setUploadMode] = useState<'url' | 'file' | 'bulk'>('file')
+    const [imageUrl, setImageUrl] = useState('')
+    const [bulkUrls, setBulkUrls] = useState('')
 
     const { login, logout, isAuthenticated, loginError, ownerEmail, hasConfiguredPasscode } = useAuthStore()
     const { photos, addPhoto, updatePhoto } = useGalleryStore()
@@ -62,24 +59,139 @@ export function LoginPage() {
         }
     }
 
+    const handleAddFromUrl = async () => {
+        if (!imageUrl.trim()) {
+            setUploadStatus('Please enter an image URL.')
+            return
+        }
+
+        try {
+            new URL(imageUrl)
+        } catch {
+            setUploadStatus('Please enter a valid URL.')
+            return
+        }
+
+        setIsUploading(true)
+        setUploadStatus('Adding to gallery...')
+
+        const success = await addPhoto({
+            url: imageUrl.trim(),
+            title: newTitle || 'Untitled Portrait',
+            description: newDescription || 'Added via URL'
+        })
+
+        if (success) {
+            const isFromImageKit = isImageKitUrl(imageUrl)
+            setUploadStatus(isFromImageKit
+                ? '✓ Photo added and synced!'
+                : '✓ Photo added! (Tip: Use ImageKit URLs for best performance)'
+            )
+            setImageUrl('')
+            setNewTitle('')
+            setNewDescription('')
+        } else {
+            setUploadStatus('Failed to add photo. Please try again.')
+        }
+        setIsUploading(false)
+    }
+
+    const handleBulkImport = async () => {
+        const urls = bulkUrls
+            .split('\n')
+            .map(url => url.trim())
+            .filter(url => url.length > 0)
+
+        if (urls.length === 0) {
+            setUploadStatus('Please paste at least one URL.')
+            return
+        }
+
+        // Validate all URLs first
+        const invalidUrls: string[] = []
+        urls.forEach(url => {
+            try {
+                new URL(url)
+            } catch {
+                invalidUrls.push(url)
+            }
+        })
+
+        if (invalidUrls.length > 0) {
+            setUploadStatus(`Invalid URLs found: ${invalidUrls.slice(0, 3).join(', ')}${invalidUrls.length > 3 ? '...' : ''}`)
+            return
+        }
+
+        setIsUploading(true)
+        setUploadStatus(`Adding ${urls.length} photos...`)
+
+        let added = 0
+        let failed = 0
+
+        for (const url of urls) {
+            // Extract filename from URL for title
+            const filename = url.split('/').pop()?.split('?')[0] || 'Untitled'
+            const title = filename.replace(/\.[^/.]+$/, '').replace(/[-_]/g, ' ')
+
+            const success = await addPhoto({
+                url,
+                title: title.charAt(0).toUpperCase() + title.slice(1),
+                description: 'Imported from ImageKit'
+            })
+
+            if (success) {
+                added++
+                setUploadStatus(`Added ${added}/${urls.length} photos...`)
+            } else {
+                failed++
+            }
+        }
+
+        if (failed === 0) {
+            setUploadStatus(`✓ Successfully added ${added} photos!`)
+            setBulkUrls('')
+        } else {
+            setUploadStatus(`Added ${added} photos, ${failed} failed.`)
+        }
+        setIsUploading(false)
+    }
+
     const handleUpload = async () => {
         if (!selectedFile) {
             setUploadStatus('Please choose an image to upload.')
             return
         }
 
-        setUploadStatus('Uploading...')
+        setIsUploading(true)
+        setUploadStatus('Uploading to ImageKit...')
+
         try {
-            const url = await fileToDataUrl(selectedFile)
-            addPhoto({ url, title: newTitle || 'Untitled Portrait', description: newDescription || 'Added by owner' })
-            setUploadStatus('Photo uploaded and added to your gallery.')
-            setSelectedFile(null)
-            setPreviewUrl(null)
-            setNewTitle('')
-            setNewDescription('')
+            // Upload directly to ImageKit
+            const imageUrl = await uploadToImageKit(selectedFile, undefined, 'Photography-Portfolio')
+
+            setUploadStatus('Saving to gallery...')
+
+            // Save to Supabase
+            const success = await addPhoto({
+                url: imageUrl,
+                title: newTitle || 'Untitled Portrait',
+                description: newDescription || 'Uploaded photo'
+            })
+
+            if (success) {
+                setUploadStatus('✓ Photo uploaded and synced across all devices!')
+                setSelectedFile(null)
+                setPreviewUrl(null)
+                setNewTitle('')
+                setNewDescription('')
+            } else {
+                setUploadStatus('Photo uploaded to ImageKit but failed to save. Try adding via URL.')
+            }
         } catch (error) {
+            console.error('Upload failed:', error)
             setUploadStatus(error instanceof Error ? error.message : 'Upload failed. Please try again.')
         }
+        setIsUploading(false)
     }
 
     const handleDraftChange = (id: string, field: 'title' | 'description', value: string) => {
@@ -101,21 +213,21 @@ export function LoginPage() {
     const managementDisabled = useMemo(() => !isAuthenticated || Boolean(loginError), [isAuthenticated, loginError])
 
     return (
-        <div className="min-h-screen bg-gradient-to-b from-slate-950 via-black to-slate-950 text-white">
+        <div className="min-h-screen bg-gradient-to-b from-slate-950 via-black to-slate-950 text-white intro-gradient-bg">
             <div className="mx-auto flex max-w-5xl flex-col gap-10 px-6 py-24 md:py-32">
                 <div className="space-y-3 text-center">
-                    <p className="text-sm uppercase tracking-[0.3em] text-gray-400">Owner Access</p>
-                    <h1 className="text-4xl font-semibold tracking-tight md:text-5xl">Sign in to manage content</h1>
-                    <p className="text-gray-400">
+                    <p className="text-sm uppercase tracking-[0.3em] text-gray-400 intro-fade-up intro-delay-1">Owner Access</p>
+                    <h1 className="text-4xl font-semibold tracking-tight md:text-5xl intro-fade-up intro-delay-2">Sign in to manage content</h1>
+                    <p className="text-gray-400 intro-fade-up intro-delay-3">
                         Use your private passcode to unlock management tools such as uploading and organizing photos.
                     </p>
                 </div>
 
                 <motion.div
-                    initial={{ opacity: 0, y: 12 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.4 }}
-                    className="rounded-3xl border border-white/10 bg-white/5 p-8 shadow-2xl shadow-blue-500/5 backdrop-blur"
+                    initial={{ opacity: 0, y: 30, scale: 0.95 }}
+                    animate={{ opacity: 1, y: 0, scale: 1 }}
+                    transition={{ duration: 0.6, delay: 0.3, ease: [0.16, 1, 0.3, 1] }}
+                    className="rounded-3xl border border-white/10 bg-white/5 p-8 shadow-2xl shadow-blue-500/5 backdrop-blur intro-glow"
                 >
                     <div className="flex flex-col gap-6">
                         <div className="flex items-center justify-between gap-4">
@@ -180,20 +292,38 @@ export function LoginPage() {
                     </div>
                 </motion.div>
 
-                <div className="rounded-2xl border border-white/5 bg-white/[0.02] p-6 text-sm text-gray-400">
+                <motion.div
+                    initial={{ opacity: 0, x: -40 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ duration: 0.5, delay: 0.5, ease: "easeOut" }}
+                    className="rounded-2xl border border-white/5 bg-white/[0.02] p-6 text-sm text-gray-400"
+                >
                     <h2 className="mb-2 text-sm font-semibold text-white">How this works</h2>
                     <ul className="list-disc space-y-2 pl-4">
                         <li>The owner passcode is stored in the environment as <code className="font-mono">VITE_OWNER_PASSWORD</code>.</li>
                         <li>When you log in successfully, a private session is saved in your browser to keep you authenticated.</li>
                         <li>Use this session to upload photos or manage content without exposing controls to visitors.</li>
                     </ul>
-                </div>
+                </motion.div>
 
-                <section className="rounded-3xl border border-white/10 bg-white/5 p-8 shadow-2xl shadow-blue-500/5 backdrop-blur space-y-6">
+                <motion.section
+                    initial={{ opacity: 0, y: 50 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.7, delay: 0.6, ease: [0.16, 1, 0.3, 1] }}
+                    className="rounded-3xl border border-white/10 bg-white/5 p-8 shadow-2xl shadow-blue-500/5 backdrop-blur space-y-6"
+                >
                     <div className="flex flex-col gap-2">
-                        <p className="text-sm uppercase tracking-[0.3em] text-gray-400">Content management</p>
+                        <div className="flex items-center justify-between">
+                            <p className="text-sm uppercase tracking-[0.3em] text-gray-400">Content management</p>
+                            <span className="flex items-center gap-2 text-xs text-emerald-300">
+                                <span className="w-2 h-2 rounded-full bg-emerald-400" />
+                                Auto-synced via Supabase
+                            </span>
+                        </div>
                         <h2 className="text-2xl font-semibold">Upload new photos and edit descriptions</h2>
-                        <p className="text-gray-300 text-sm">Your changes are stored locally in this browser so you can curate the gallery before publishing.</p>
+                        <p className="text-gray-300 text-sm">
+                            Photos are automatically uploaded to ImageKit and synced across all devices via Supabase.
+                        </p>
                     </div>
 
                     {managementDisabled && (
@@ -204,7 +334,42 @@ export function LoginPage() {
 
                     <div className={`grid grid-cols-1 gap-6 lg:grid-cols-3 ${managementDisabled ? 'opacity-50 pointer-events-none' : ''}`}>
                         <div className="col-span-2 space-y-4 rounded-2xl border border-white/10 bg-black/40 p-6">
-                            <h3 className="text-lg font-semibold">Upload a new photo</h3>
+                            <h3 className="text-lg font-semibold">Add a new photo</h3>
+
+                            {/* Upload Mode Tabs */}
+                            <div className="flex gap-2 p-1 rounded-xl bg-white/5">
+                                <button
+                                    type="button"
+                                    onClick={() => setUploadMode('file')}
+                                    className={`flex-1 px-4 py-2 rounded-lg text-sm font-medium transition ${uploadMode === 'file'
+                                        ? 'bg-gradient-to-r from-blue-500 to-purple-500 text-white shadow-lg'
+                                        : 'text-gray-400 hover:text-white'
+                                        }`}
+                                >
+                                    📁 Upload File
+                                </button>
+                                <button
+                                    type="button"
+                                    onClick={() => setUploadMode('url')}
+                                    className={`flex-1 px-4 py-2 rounded-lg text-sm font-medium transition ${uploadMode === 'url'
+                                        ? 'bg-gradient-to-r from-blue-500 to-purple-500 text-white shadow-lg'
+                                        : 'text-gray-400 hover:text-white'
+                                        }`}
+                                >
+                                    🔗 Single URL
+                                </button>
+                                <button
+                                    type="button"
+                                    onClick={() => setUploadMode('bulk')}
+                                    className={`flex-1 px-4 py-2 rounded-lg text-sm font-medium transition ${uploadMode === 'bulk'
+                                        ? 'bg-gradient-to-r from-emerald-500 to-teal-500 text-white shadow-lg'
+                                        : 'text-gray-400 hover:text-white'
+                                        }`}
+                                >
+                                    📦 Bulk Import
+                                </button>
+                            </div>
+
                             <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
                                 <label className="space-y-2 text-sm font-medium text-gray-200">
                                     <span>Photo title</span>
@@ -228,22 +393,76 @@ export function LoginPage() {
                                 </label>
                             </div>
 
-                            <div className="space-y-2 text-sm font-medium text-gray-200">
-                                <span>Upload image</span>
-                                <label className="flex flex-col items-center justify-center gap-3 rounded-xl border border-dashed border-white/20 bg-black/30 px-6 py-8 text-center transition hover:border-white/40">
-                                    <input type="file" accept="image/*" className="hidden" onChange={handleFileChange} />
-                                    <div className="flex flex-col items-center gap-2 text-gray-300">
-                                        <span className="text-lg font-semibold">Drop an image or click to browse</span>
-                                        <span className="text-xs text-gray-400">High-resolution JPG or PNG recommended</span>
+                            {uploadMode === 'url' ? (
+                                <div className="space-y-4">
+                                    <div className="rounded-xl border border-emerald-500/30 bg-emerald-500/10 px-4 py-3 text-sm text-emerald-100">
+                                        <strong>Recommended:</strong> Upload images to <a href="https://imagekit.io/dashboard/media-library" target="_blank" rel="noopener noreferrer" className="underline hover:text-white">ImageKit Media Library</a>, then paste the URL below.
                                     </div>
-                                    {selectedFile && <p className="text-xs text-blue-100">{selectedFile.name}</p>}
-                                </label>
-                            </div>
+                                    <label className="space-y-2 text-sm font-medium text-gray-200">
+                                        <span>Image URL</span>
+                                        <input
+                                            type="url"
+                                            value={imageUrl}
+                                            onChange={(event) => setImageUrl(event.target.value)}
+                                            placeholder={`${imagekitConfig.urlEndpoint}/Photography-Portfolio/your-image.jpg`}
+                                            className="w-full rounded-xl border border-white/10 bg-black/40 px-4 py-3 text-white outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-500/30"
+                                        />
+                                    </label>
+                                    {imageUrl && (
+                                        <div className="rounded-xl border border-white/10 bg-black/40 p-4">
+                                            <p className="text-sm text-gray-300 mb-2">Preview</p>
+                                            <img
+                                                src={imageUrl}
+                                                alt="Preview"
+                                                className="h-48 w-full rounded-lg object-cover"
+                                                onError={(e) => {
+                                                    (e.target as HTMLImageElement).src = 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100"><rect fill="%23333" width="100" height="100"/><text fill="%23999" x="50%" y="50%" text-anchor="middle" dy=".3em" font-size="12">Invalid URL</text></svg>'
+                                                }}
+                                            />
+                                        </div>
+                                    )}
+                                </div>
+                            ) : uploadMode === 'bulk' ? (
+                                <div className="space-y-4">
+                                    <div className="rounded-xl border border-emerald-500/30 bg-emerald-500/10 px-4 py-3 text-sm text-emerald-100">
+                                        <strong>Bulk Import:</strong> Paste multiple ImageKit URLs below (one per line). Titles will be auto-generated from filenames.
+                                    </div>
+                                    <label className="space-y-2 text-sm font-medium text-gray-200">
+                                        <span>Image URLs (one per line)</span>
+                                        <textarea
+                                            value={bulkUrls}
+                                            onChange={(e) => setBulkUrls(e.target.value)}
+                                            placeholder="https://ik.imagekit.io/dmsully/photo1.jpg"
+                                            rows={8}
+                                            className="w-full rounded-xl border border-white/10 bg-black/40 px-4 py-3 text-white outline-none transition focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/30 font-mono text-sm"
+                                        />
+                                    </label>
+                                    {bulkUrls && (
+                                        <p className="text-xs text-gray-400">
+                                            {bulkUrls.split('\n').filter(l => l.trim()).length} URLs detected
+                                        </p>
+                                    )}
+                                </div>
+                            ) : (
+                                <div className="space-y-4">
+                                    <div className="space-y-2 text-sm font-medium text-gray-200">
+                                        <span>Upload image</span>
+                                        <label className="flex flex-col items-center justify-center gap-3 rounded-xl border border-dashed border-white/20 bg-black/30 px-6 py-8 text-center transition hover:border-white/40 cursor-pointer">
+                                            <input type="file" accept="image/*" className="hidden" onChange={handleFileChange} />
+                                            <div className="flex flex-col items-center gap-2 text-gray-300">
+                                                <span className="text-lg font-semibold">Drop an image or click to browse</span>
+                                                <span className="text-xs text-gray-400">High-resolution JPG or PNG recommended</span>
+                                            </div>
+                                            {selectedFile && <p className="text-xs text-blue-100">{selectedFile.name}</p>}
+                                        </label>
+                                    </div>
 
-                            {previewUrl && (
-                                <div className="rounded-xl border border-white/10 bg-black/40 p-4">
-                                    <p className="text-sm text-gray-300">Preview</p>
-                                    <img src={previewUrl} alt="Selected preview" className="mt-3 h-48 w-full rounded-lg object-cover" />
+                                    {previewUrl && (
+                                        <div className="rounded-xl border border-white/10 bg-black/40 p-4">
+                                            <p className="text-sm text-gray-300">Preview</p>
+                                            <img src={previewUrl} alt="Selected preview" className="mt-3 h-48 w-full rounded-lg object-cover" />
+                                        </div>
+                                    )}
                                 </div>
                             )}
 
@@ -251,10 +470,11 @@ export function LoginPage() {
 
                             <button
                                 type="button"
-                                onClick={handleUpload}
-                                className="w-full rounded-xl bg-gradient-to-r from-emerald-500 to-blue-500 px-6 py-3 text-sm font-semibold uppercase tracking-wide text-white shadow-lg shadow-emerald-500/25 transition hover:from-emerald-400 hover:to-blue-400 focus:outline-none focus:ring-2 focus:ring-emerald-500/50"
+                                onClick={uploadMode === 'bulk' ? handleBulkImport : uploadMode === 'url' ? handleAddFromUrl : handleUpload}
+                                disabled={isUploading}
+                                className="w-full rounded-xl bg-gradient-to-r from-emerald-500 to-blue-500 px-6 py-3 text-sm font-semibold uppercase tracking-wide text-white shadow-lg shadow-emerald-500/25 transition hover:from-emerald-400 hover:to-blue-400 focus:outline-none focus:ring-2 focus:ring-emerald-500/50 disabled:opacity-50 disabled:cursor-not-allowed"
                             >
-                                Add to gallery
+                                {isUploading ? 'Uploading...' : 'Add to gallery'}
                             </button>
                         </div>
 
@@ -293,7 +513,7 @@ export function LoginPage() {
                             </div>
                         </div>
                     </div>
-                </section>
+                </motion.section>
             </div>
         </div>
     )

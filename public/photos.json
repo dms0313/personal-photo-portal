@@ -1,0 +1,38 @@
+[
+    {
+        "id": "default-1",
+        "url": "https://ik.imagekit.io/dmsully/Photography-Portfolio/photo1.jpg",
+        "title": "Sunlit Portrait",
+        "description": "Golden hour portrait session with dramatic shadows and soft highlights."
+    },
+    {
+        "id": "default-2",
+        "url": "https://ik.imagekit.io/dmsully/Photography-Portfolio/photo2.jpg",
+        "title": "Studio Expression",
+        "description": "Minimal studio lighting to focus on expression and presence."
+    },
+    {
+        "id": "default-3",
+        "url": "https://ik.imagekit.io/dmsully/Photography-Portfolio/photo3.jpg",
+        "title": "Windswept",
+        "description": "Outdoor portrait capturing movement and personality against a coastal backdrop."
+    },
+    {
+        "id": "default-4",
+        "url": "https://ik.imagekit.io/dmsully/Photography-Portfolio/photo4.jpg",
+        "title": "Quiet Moment",
+        "description": "Natural light portrait focused on emotion and intimacy."
+    },
+    {
+        "id": "default-5",
+        "url": "https://ik.imagekit.io/dmsully/Photography-Portfolio/photo5.jpg",
+        "title": "Editorial Edge",
+        "description": "Moody editorial-inspired portrait with graphic lines and texture."
+    },
+    {
+        "id": "default-6",
+        "url": "https://ik.imagekit.io/dmsully/Photography-Portfolio/photo6.jpg",
+        "title": "Portrait in Motion",
+        "description": "Soft blur and motion to convey energy and life."
+    }
+]

@@ -65,3 +65,198 @@
 ::-webkit-scrollbar-thumb:hover {
   background: #555;
 }
+
+/* Custom Cursor */
+* {
+  cursor: none !important;
+}
+
+.custom-cursor {
+  pointer-events: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 9999;
+  mix-blend-mode: difference;
+}
+
+.cursor-dot {
+  width: 8px;
+  height: 8px;
+  background: white;
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  transition: transform 0.1s ease-out;
+}
+
+.cursor-ring {
+  width: 40px;
+  height: 40px;
+  border: 2px solid rgba(255, 255, 255, 0.5);
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  transition: all 0.15s ease-out;
+}
+
+.cursor-ring.hovering {
+  width: 60px;
+  height: 60px;
+  border-color: rgba(139, 92, 246, 0.8);
+  background: rgba(139, 92, 246, 0.1);
+}
+
+/* Intro Animation Keyframes */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(40px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slideInFromLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-60px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes slideInFromRight {
+  from {
+    opacity: 0;
+    transform: translateX(60px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes scaleIn {
+  from {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes glowPulse {
+
+  0%,
+  100% {
+    box-shadow: 0 0 20px rgba(59, 130, 246, 0.3), 0 0 40px rgba(139, 92, 246, 0.2);
+  }
+
+  50% {
+    box-shadow: 0 0 30px rgba(59, 130, 246, 0.5), 0 0 60px rgba(139, 92, 246, 0.3);
+  }
+}
+
+@keyframes gradientShift {
+  0% {
+    background-position: 0% 50%;
+  }
+
+  50% {
+    background-position: 100% 50%;
+  }
+
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+/* Intro Animation Classes */
+.intro-fade-up {
+  animation: fadeInUp 0.8s ease-out forwards;
+}
+
+.intro-fade {
+  animation: fadeIn 1s ease-out forwards;
+}
+
+.intro-slide-left {
+  animation: slideInFromLeft 0.7s ease-out forwards;
+}
+
+.intro-slide-right {
+  animation: slideInFromRight 0.7s ease-out forwards;
+}
+
+.intro-scale {
+  animation: scaleIn 0.6s ease-out forwards;
+}
+
+.intro-glow {
+  animation: glowPulse 3s ease-in-out infinite;
+}
+
+.intro-gradient-bg {
+  background-size: 200% 200%;
+  animation: gradientShift 8s ease infinite;
+}
+
+/* Staggered delays for intro elements */
+.intro-delay-1 {
+  animation-delay: 0.1s;
+  opacity: 0;
+}
+
+.intro-delay-2 {
+  animation-delay: 0.2s;
+  opacity: 0;
+}
+
+.intro-delay-3 {
+  animation-delay: 0.3s;
+  opacity: 0;
+}
+
+.intro-delay-4 {
+  animation-delay: 0.4s;
+  opacity: 0;
+}
+
+.intro-delay-5 {
+  animation-delay: 0.5s;
+  opacity: 0;
+}
+
+.intro-delay-6 {
+  animation-delay: 0.6s;
+  opacity: 0;
+}
+
+.intro-delay-7 {
+  animation-delay: 0.7s;
+  opacity: 0;
+}
+
+.intro-delay-8 {
+  animation-delay: 0.8s;
+  opacity: 0;
+}

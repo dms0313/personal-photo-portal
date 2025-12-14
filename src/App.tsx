@@ -1,6 +1,7 @@
 import { Routes, Route } from 'react-router-dom'
 import { FiInstagram, FiMail, FiTwitter } from 'react-icons/fi'
 
+import { CustomCursor } from './components/CustomCursor'
 import { Navigation } from './components/Navigation'
 import { BookingPage } from './pages/BookingPage'
 import { GalleryPage } from './pages/GalleryPage'
@@ -10,7 +11,9 @@ import { LoginPage } from './pages/LoginPage'
 function App() {
   return (
     <div className="relative flex min-h-screen flex-col overflow-x-hidden bg-background text-foreground">
+      <CustomCursor />
       <Navigation />
+
 
       <main className="flex-grow">
         <Routes>

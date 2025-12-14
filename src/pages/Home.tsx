@@ -29,7 +29,7 @@ export function Home() {
                     <motion.div
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
-                        transition={{ duration: 0.8, ease: "easeOut" }}
+                        transition={{ duration: 1.8, ease: "easeOut" }}
                     >
                         <h1 className="text-6xl md:text-9xl font-bold tracking-tighter mb-6">
                             <span className="text-white">DAN</span>
@@ -41,27 +41,27 @@ export function Home() {
                     <motion.p
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
-                        transition={{ delay: 0.5, duration: 0.8 }}
-                        className="text-xl md:text-2xl text-gray-400 font-light tracking-widest uppercase mb-8"
+                        transition={{ delay: 0.5, duration: 2.2 }}
+                        className="text-xl md:text-3xl text-gray-100 font-light tracking-widest uppercase mb-8"
                     >
-                        PORTRAIT PHOTOGRAPHER
+                        PROFESSIONAL PHOTOGRAPHER
                     </motion.p>
 
                     <motion.div
                         initial={{ opacity: 0, scale: 0.9 }}
                         animate={{ opacity: 1, scale: 1 }}
-                        transition={{ delay: 0.7, duration: 0.5 }}
+                        transition={{ delay: 2.0, duration: 0.5 }}
                     >
                         <Link to="/booking">
                             <motion.button
                                 whileHover={{
-                                    scale: 1.05,
+                                    scale: 2.05,
                                     backgroundColor: "rgba(255, 255, 255, 0.15)",
                                     borderColor: "rgba(255, 255, 255, 0.6)",
                                     boxShadow: "0 0 20px rgba(255, 255, 255, 0.2)"
                                 }}
                                 whileTap={{ scale: 0.95 }}
-                                transition={{ duration: 0.3 }}
+                                transition={{ delay: 5.0, duration: 1.5 }}
                                 className="px-8 py-3 rounded-full bg-white/5 backdrop-blur-sm border border-white/20 text-white font-medium transition-all duration-300 relative overflow-hidden group"
                             >
                                 <span className="relative z-10">BOOK A SESSION</span>
