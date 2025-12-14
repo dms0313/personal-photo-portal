@@ -86,23 +86,24 @@
   background: white;
   border-radius: 50%;
   transform: translate(-50%, -50%);
-  transition: transform 0.1s ease-out;
+  /* CRITICAL: No transition here to prevent input lag */
 }
 
 .cursor-ring {
-  width: 40px;
-  height: 40px;
-  border: 2px solid rgba(255, 255, 255, 0.5);
+  width: 32px;
+  height: 32px;
+  border: 1.5px solid rgba(255, 255, 255, 0.8);
   border-radius: 50%;
   transform: translate(-50%, -50%);
-  transition: all 0.15s ease-out;
+  /* CRITICAL: No transform transition here to prevent double-smoothing lag */
+  transition: width 0.2s, height 0.2s, background-color 0.2s, border-color 0.2s;
 }
 
 .cursor-ring.hovering {
-  width: 60px;
-  height: 60px;
-  border-color: rgba(139, 92, 246, 0.8);
-  background: rgba(139, 92, 246, 0.1);
+  width: 48px;
+  height: 48px;
+  border-color: rgba(255, 255, 255, 0.4);
+  background: rgba(255, 255, 255, 0.1);
 }
 
 /* Intro Animation Keyframes */
