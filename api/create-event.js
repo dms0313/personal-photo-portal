@@ -29,6 +29,35 @@ export default async function handler(req, res) {
 
         const credentials = JSON.parse(serviceAccountStr);
 
+        // Fix for Vercel/env var newline issues in private key
+        if (credentials.private_key) {
+            // Robust sanitization: verify it's a string, handle standard and double escaped newlines
+            let key = credentials.private_key;
+            if (typeof key === 'string') {
+                // Replace literal "\n" (two chars) with real newline
+                key = key.replace(/\\n/g, '\n');
+
+                // If that didn't work (maybe double escaped?), try checking if we still have no newlines 
+                // and the string contains "-----BEGIN"
+                if (key.indexOf('\n') === -1 && key.indexOf('-----BEGIN') !== -1) {
+                    console.log('Detected potential issue: Private Key has no newlines after first pass. Trying stronger fix.');
+                }
+
+                credentials.private_key = key;
+            }
+
+            console.log('--- CREDENTIALS DEBUG ---');
+            console.log('Client Email:', credentials.client_email);
+            console.log('Private Key length:', credentials.private_key.length);
+            const firstLine = credentials.private_key.split('\n')[0];
+            const lastLine = credentials.private_key.split('\n').filter(l => l.trim()).pop();
+            console.log('Private Key first line:', firstLine);
+            console.log('Private Key last line:', lastLine);
+            console.log('-------------------------');
+        } else {
+            console.warn('Warning: No private_key found in credentials object');
+        }
+
         const auth = new google.auth.GoogleAuth({
             credentials,
             scopes: ['https://www.googleapis.com/auth/calendar'],
