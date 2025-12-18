@@ -1,3 +1,4 @@
+import { Analytics } from '@vercel/analytics/react'
 import { Routes, Route } from 'react-router-dom'
 import { FiInstagram, FiMail, FiTwitter } from 'react-icons/fi'
 
@@ -29,6 +30,8 @@ function App() {
           <Route path="/login" element={<LoginPage />} />
         </Routes>
       </main>
+
+      <Analytics />
 
       {/* Footer */}
       <footer className="py-12">
