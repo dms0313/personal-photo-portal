@@ -36,8 +36,8 @@ export function GalleryPage() {
                             key={cat.id}
                             onClick={() => setActiveCategory(cat.id)}
                             className={`px-6 py-2 rounded-full text-sm font-medium transition-all ${activeCategory === cat.id
-                                ? 'bg-[#00ADB5] text-[#303841] scale-105 shadow-lg'
-                                : 'bg-white/5 text-[#EEEEEE]/70 hover:bg-white/10 hover:text-[#EEEEEE]'
+                                ? 'bg-[#00ADB5] text-[#1f2a33] scale-105 shadow-lg'
+                                : 'bg-black/5 text-[#1f2a33]/70 hover:bg-black/10 hover:text-[#1f2a33]'
                                 }`}
                         >
                             {cat.label}

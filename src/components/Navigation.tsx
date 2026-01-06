@@ -14,7 +14,6 @@ export function Navigation() {
     }, [location]);
 
     const links = [
-        { name: 'PORTFOLIO', path: '/concept' },
         { name: 'SERVICES', path: '/services' },
         { name: 'GALLERY', path: '/gallery' },
         { name: 'BOOK', path: '/booking' },
@@ -33,15 +32,15 @@ export function Navigation() {
             </Link>
 
             {/* Desktop Menu */}
-            <ul className="hidden md:flex gap-8 text-sm font-medium tracking-wide text-[#EEEEEE]/80">
+            <ul className="hidden md:flex gap-8 text-sm font-medium tracking-wide text-[#1f2a33]/80">
                 {links.map((link) => (
                     <li key={link.name}>
-                        <Link to={link.path} className="hover:text-[#EEEEEE] transition-colors relative group">
+                        <Link to={link.path} className="hover:text-[#1f2a33] transition-colors relative group">
                             {link.name}
                             {location.pathname === link.path && (
                                 <motion.div
                                     layoutId="underline"
-                                    className="absolute left-0 right-0 -bottom-1 h-0.5 bg-gradient-to-r from-[#00ADB5] to-[#EEEEEE]"
+                                    className="absolute left-0 right-0 -bottom-1 h-0.5 bg-gradient-to-r from-[#00ADB5] to-[#1f2a33]"
                                 />
                             )}
                         </Link>
@@ -52,7 +51,7 @@ export function Navigation() {
             {/* Mobile Menu Toggle */}
             <button
                 onClick={() => setIsOpen(!isOpen)}
-                className="md:hidden text-[#EEEEEE] z-50 relative p-2"
+                className="md:hidden text-[#1f2a33] z-50 relative p-2"
                 aria-label="Toggle Menu"
             >
                 {isOpen ? <FiX size={24} /> : <FiMenu size={24} />}
@@ -66,13 +65,13 @@ export function Navigation() {
                             initial={{ opacity: 0, y: -20 }}
                             animate={{ opacity: 1, y: 0 }}
                             exit={{ opacity: 0, y: -20 }}
-                            className="fixed inset-0 bg-[#303841]/95 backdrop-blur-xl z-40 flex flex-col items-center justify-center space-y-8 md:hidden"
+                            className="fixed inset-0 bg-white/95 backdrop-blur-xl z-40 flex flex-col items-center justify-center space-y-8 md:hidden"
                         >
                             {links.map((link) => (
                                 <Link
                                     key={link.name}
                                     to={link.path}
-                                    className="text-2xl font-light tracking-widest text-[#EEEEEE] hover:text-gradient transition-colors"
+                                    className="text-2xl font-light tracking-widest text-[#1f2a33] hover:text-gradient transition-colors"
                                     onClick={() => setIsOpen(false)}
                                 >
                                     {link.name}
