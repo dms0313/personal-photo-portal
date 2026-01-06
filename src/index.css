@@ -10,8 +10,10 @@
 
 :root {
   /* Site-wide Color Palette */
-  --background: #ffffff; /* Crisp white */
-  --foreground: #1f2a33; /* Deep slate */
+  --background: #ffffff;
+  /* Crisp white */
+  --foreground: #1f2a33;
+  /* Deep slate */
 
   /* Palette definitions */
   --color-dark: #1f2a33;
@@ -47,7 +49,7 @@
   }
 
   .text-gradient {
-    @apply bg-clip-text text-transparent bg-gradient-to-r from-[#00ADB5] to-[#EEEEEE];
+    @apply bg-clip-text text-transparent bg-gradient-to-r from-[#00ADB5] to-black;
   }
 
   .text-inverse {

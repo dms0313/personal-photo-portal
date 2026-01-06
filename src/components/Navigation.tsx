@@ -40,7 +40,7 @@ export function Navigation() {
                             {location.pathname === link.path && (
                                 <motion.div
                                     layoutId="underline"
-                                    className="absolute left-0 right-0 -bottom-1 h-0.5 bg-gradient-to-r from-[#00ADB5] to-white"
+                                    className="absolute left-0 right-0 -bottom-1 h-0.5 bg-gradient-to-r from-[#00ADB5] to-black"
                                 />
                             )}
                         </Link>
