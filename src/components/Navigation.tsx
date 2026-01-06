@@ -14,7 +14,7 @@ export function Navigation() {
     }, [location]);
 
     const links = [
-        { name: 'PORTFOLIO', path: '/' },
+        { name: 'PORTFOLIO', path: '/concept' },
         { name: 'SERVICES', path: '/services' },
         { name: 'GALLERY', path: '/gallery' },
         { name: 'BOOK', path: '/booking' },
