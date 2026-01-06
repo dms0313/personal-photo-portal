@@ -25,22 +25,22 @@ export function Navigation() {
             initial={{ y: -100, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
             transition={{ duration: 0.8, ease: "easeOut" }}
-            className="fixed top-0 left-0 right-0 z-50 glass px-6 py-4 flex justify-between items-center"
+            className="fixed top-0 left-0 right-0 z-50 bg-black px-6 py-4 flex justify-between items-center shadow-lg"
         >
-            <Link to="/" className="text-xl font-bold tracking-tighter z-50 relative">
+            <Link to="/" className="text-xl font-bold tracking-tighter z-50 relative text-white">
                 DAN<span className="text-gradient">SULLIVAN</span>
             </Link>
 
             {/* Desktop Menu */}
-            <ul className="hidden md:flex gap-8 text-sm font-medium tracking-wide text-[#1f2a33]/80">
+            <ul className="hidden md:flex gap-8 text-sm font-medium tracking-wide text-white/80">
                 {links.map((link) => (
                     <li key={link.name}>
-                        <Link to={link.path} className="hover:text-[#1f2a33] transition-colors relative group">
+                        <Link to={link.path} className="hover:text-white transition-colors relative group">
                             {link.name}
                             {location.pathname === link.path && (
                                 <motion.div
                                     layoutId="underline"
-                                    className="absolute left-0 right-0 -bottom-1 h-0.5 bg-gradient-to-r from-[#00ADB5] to-[#1f2a33]"
+                                    className="absolute left-0 right-0 -bottom-1 h-0.5 bg-gradient-to-r from-[#00ADB5] to-white"
                                 />
                             )}
                         </Link>
@@ -51,7 +51,7 @@ export function Navigation() {
             {/* Mobile Menu Toggle */}
             <button
                 onClick={() => setIsOpen(!isOpen)}
-                className="md:hidden text-[#1f2a33] z-50 relative p-2"
+                className={`md:hidden z-50 relative p-2 transition-colors ${isOpen ? 'text-[#1f2a33]' : 'text-white'}`}
                 aria-label="Toggle Menu"
             >
                 {isOpen ? <FiX size={24} /> : <FiMenu size={24} />}
