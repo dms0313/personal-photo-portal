@@ -13,15 +13,15 @@ export function Background() {
 
     return (
         <div className="fixed inset-0 z-[-1] overflow-hidden pointer-events-none">
-            {/* Base dark layer to ensure text readability */}
-            <div className="absolute inset-0 bg-[#303841]" />
+            {/* Base light layer to keep the canvas bright */}
+            <div className="absolute inset-0 bg-white" />
 
             {/* Subtle Gradient Mesh (Static Base) */}
             <div className="absolute inset-0 opacity-40"
                 style={{
                     background: `
-                        radial-gradient(circle at 10% 20%, rgba(0, 173, 181, 0.35) 0%, transparent 45%),
-                        radial-gradient(circle at 90% 80%, rgba(58, 71, 80, 0.35) 0%, transparent 45%)
+                        radial-gradient(circle at 10% 20%, rgba(0, 173, 181, 0.25) 0%, transparent 50%),
+                        radial-gradient(circle at 90% 80%, rgba(31, 42, 51, 0.15) 0%, transparent 55%)
                     `
                 }}
             />
@@ -31,13 +31,13 @@ export function Background() {
                 {/* Purple Blob (Top Left) -> Moves Down & Left */}
                 <motion.div
                     style={{ y, x: xLeft }}
-                    className="absolute top-[-10%] left-[-10%] w-[60%] h-[60%] bg-[#00ADB5] rounded-full blur-[120px] will-change-transform"
+                    className="absolute top-[-10%] left-[-10%] w-[60%] h-[60%] bg-[#00ADB5]/35 rounded-full blur-[140px] will-change-transform"
                 />
 
                 {/* Blue Blob (Bottom Right) -> Moves Down & Right */}
                 <motion.div
                     style={{ y, x: xRight }}
-                    className="absolute bottom-[-10%] right-[-10%] w-[60%] h-[60%] bg-[#3A4750] rounded-full blur-[120px] will-change-transform"
+                    className="absolute bottom-[-10%] right-[-10%] w-[60%] h-[60%] bg-[#cfd8df] rounded-full blur-[140px] will-change-transform"
                 />
             </div>
 
