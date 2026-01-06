@@ -19,9 +19,16 @@ export function LoginPage() {
     const [uploadMode, setUploadMode] = useState<'url' | 'file' | 'bulk'>('file')
     const [imageUrl, setImageUrl] = useState('')
     const [bulkUrls, setBulkUrls] = useState('')
+    const [showFeaturedOnly, setShowFeaturedOnly] = useState(false)
 
     const { login, logout, isAuthenticated, loginError, ownerEmail } = useAuthStore()
     const { photos, addPhoto, updatePhoto } = useGalleryStore()
+
+    const featuredCount = useMemo(() => photos.filter((photo) => photo.is_featured).length, [photos])
+    const visiblePhotos = useMemo(
+        () => (showFeaturedOnly ? photos.filter((photo) => photo.is_featured) : photos),
+        [photos, showFeaturedOnly]
+    )
 
     useEffect(() => {
         return () => {
@@ -475,10 +482,33 @@ export function LoginPage() {
                                 </div>
 
                                 <div className="space-y-3 rounded-2xl border border-white/10 bg-black/40 p-6">
-                                    <h3 className="text-lg font-semibold">Manage existing photos</h3>
-                                    <p className="text-sm text-[#EEEEEE]/80">Update descriptions or rename titles to keep the gallery current.</p>
+                                    <div className="flex flex-wrap items-center justify-between gap-3">
+                                        <div>
+                                            <h3 className="text-lg font-semibold">Manage existing photos</h3>
+                                            <p className="text-sm text-[#EEEEEE]/80">
+                                                Featured photos appear on the landing page. Select them here to control what visitors see.
+                                            </p>
+                                        </div>
+                                        <button
+                                            type="button"
+                                            onClick={() => setShowFeaturedOnly((prev) => !prev)}
+                                            className={`rounded-lg border px-3 py-2 text-xs font-semibold uppercase tracking-wide transition ${showFeaturedOnly
+                                                ? 'bg-[#00ADB5]/10 border-[#00ADB5]/40 text-[#00ADB5] hover:bg-[#00ADB5]/20'
+                                                : 'border-white/10 text-[#EEEEEE]/70 hover:border-[#00ADB5]/40 hover:text-[#00ADB5]'
+                                                }`}
+                                        >
+                                            {showFeaturedOnly ? `Showing featured (${featuredCount})` : 'Show featured only'}
+                                        </button>
+                                    </div>
                                     <div className="space-y-4 max-h-[520px] overflow-y-auto pr-2">
-                                        {photos.map((photo) => (
+                                        {visiblePhotos.length === 0 && (
+                                            <p className="rounded-lg border border-dashed border-white/10 bg-white/5 px-4 py-6 text-center text-sm text-[#EEEEEE]/70">
+                                                {showFeaturedOnly
+                                                    ? 'No featured photos yet. Use the ☆ Feature button to add photos to the landing page.'
+                                                    : 'No photos available yet. Upload a new photo to get started.'}
+                                            </p>
+                                        )}
+                                        {visiblePhotos.map((photo) => (
                                             <div key={photo.id} className="rounded-xl border border-white/5 bg-white/5 p-4 space-y-3">
                                                 <div className="flex gap-3">
                                                     <img src={photo.url} alt={photo.title} className="h-16 w-16 min-w-[4rem] rounded-lg object-cover" />
