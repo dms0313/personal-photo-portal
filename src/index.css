@@ -10,20 +10,20 @@
 
 :root {
   /* Site-wide Color Palette */
-  --background: #303841; /* Deep slate */
-  --foreground: #EEEEEE; /* Soft light */
+  --background: #ffffff; /* Crisp white */
+  --foreground: #1f2a33; /* Deep slate */
 
   /* Palette definitions */
-  --color-dark: #303841;
-  --color-gray: #3A4750;
+  --color-dark: #1f2a33;
+  --color-gray: #dfe6ec;
   --color-teal: #00ADB5;
-  --color-light: #EEEEEE;
+  --color-light: #f7f9fb;
 
-  --primary: #303841;
+  --primary: #1f2a33;
   --accent: #00ADB5;
-  --muted: #3A4750;
+  --muted: #dfe6ec;
 
-  color-scheme: dark;
+  color-scheme: light;
 }
 
 @layer base {
@@ -43,11 +43,11 @@
 /* Custom Utilities for Animations & Glassmorphism */
 @layer utilities {
   .glass {
-    @apply bg-white/5 backdrop-blur-md border border-white/10;
+    @apply bg-white/70 backdrop-blur-md border border-black/10;
   }
 
   .text-gradient {
-    @apply bg-clip-text text-transparent bg-gradient-to-r from-[#00ADB5] via-[#3A4750] to-[#EEEEEE];
+    @apply bg-clip-text text-transparent bg-gradient-to-r from-[#00ADB5] via-[#1f2a33] to-[#3a4750];
   }
 
   .text-inverse {
@@ -76,7 +76,7 @@
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #3A4750;
+  background: #c7d0d8;
   border-radius: 4px;
 }
 
@@ -102,7 +102,7 @@
   .cursor-dot {
     width: 12px;
     height: 12px;
-    background: linear-gradient(to right, #00ADB5, #EEEEEE);
+    background: linear-gradient(to right, #00ADB5, #1f2a33);
     border-radius: 50%;
     transform: translate(-50%, -50%);
   }

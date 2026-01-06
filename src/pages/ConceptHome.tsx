@@ -34,13 +34,13 @@ const SLIDES = [
 
 export function ConceptHome() {
     return (
-        <div className="h-screen w-full overflow-y-scroll snap-y snap-mandatory bg-[#303841] text-[#EEEEEE]">
+        <div className="h-screen w-full overflow-y-scroll snap-y snap-mandatory bg-white text-[#1f2a33]">
 
             {SLIDES.map((slide, index) => (
                 <section key={slide.id} className="relative h-screen w-full snap-start flex flex-col items-center justify-center py-12 px-6 md:px-12 group">
 
                     {/* Image Container with Padding */}
-                    <div className="relative w-full h-[85%] max-w-7xl overflow-hidden shadow-2xl bg-[#3A4750]">
+                    <div className="relative w-full h-[85%] max-w-7xl overflow-hidden shadow-2xl bg-[#f0f4f7]">
                         {/* Background Overlay for Depth - using Teal accent */}
                         <div className="absolute inset-0 bg-[#00ADB5]/10 z-10 pointer-events-none mix-blend-multiply transition-opacity duration-500 group-hover:opacity-0" />
 
@@ -79,7 +79,7 @@ export function ConceptHome() {
                                 <h2 className="text-6xl md:text-8xl font-bold tracking-tighter uppercase text-center opacity-0 group-hover:opacity-100 transition-opacity duration-500 transform translate-y-4 group-hover:translate-y-0 text-inverse">
                                     {slide.title}
                                 </h2>
-                                <p className="text-xl md:text-3xl font-light tracking-[0.1em] uppercase mt-4 opacity-0 group-hover:opacity-100 transition-opacity duration-700 delay-100 transform translate-y-4 group-hover:translate-y-0 text-[#EEEEEE] bg-[#3A4750]/80 px-4 py-2 rounded-full backdrop-blur-md">
+                                <p className="text-xl md:text-3xl font-light tracking-[0.1em] uppercase mt-4 opacity-0 group-hover:opacity-100 transition-opacity duration-700 delay-100 transform translate-y-4 group-hover:translate-y-0 text-[#1f2a33] bg-white/80 px-4 py-2 rounded-full backdrop-blur-md">
                                     {slide.subtitle}
                                 </p>
                             </div>
@@ -89,7 +89,7 @@ export function ConceptHome() {
                         {slide.showCta && (
                             <div className="mt-12 pointer-events-auto opacity-0 group-hover:opacity-100 transition-all duration-700 delay-200">
                                 <Link to="/booking">
-                                    <button className="px-10 py-4 border-2 border-[#00ADB5] bg-[#00ADB5] text-[#303841] text-xl tracking-widest uppercase hover:bg-[#EEEEEE] hover:border-[#EEEEEE] hover:text-[#303841] transition-all duration-300 shadow-xl">
+                                    <button className="px-10 py-4 border-2 border-[#00ADB5] bg-[#00ADB5] text-[#1f2a33] text-xl tracking-widest uppercase hover:bg-[#1f2a33] hover:border-[#1f2a33] hover:text-white transition-all duration-300 shadow-xl">
                                         Book Now
                                     </button>
                                 </Link>
@@ -99,7 +99,7 @@ export function ConceptHome() {
                 </section>
             ))}
 
-            <div className="fixed bottom-8 left-1/2 -translate-x-1/2 text-[#EEEEEE] animate-bounce pointer-events-none z-30">
+            <div className="fixed bottom-8 left-1/2 -translate-x-1/2 text-[#1f2a33]/70 animate-bounce pointer-events-none z-30">
                 <span className="text-xs uppercase tracking-[0.3em]">Scroll</span>
             </div>
 
