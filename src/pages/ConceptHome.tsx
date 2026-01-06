@@ -193,7 +193,6 @@ function CarouselSlide({ slide, index }: { slide: typeof SLIDES[0], index: numbe
 }
 
 export function ConceptHome() {
-    const slideCount = SLIDES.length
     const initialIndices = useMemo(
         () => SLIDES.map(() => 0),
         []
