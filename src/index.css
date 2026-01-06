@@ -47,7 +47,7 @@
   }
 
   .text-gradient {
-    @apply bg-clip-text text-transparent bg-gradient-to-r from-[#00ADB5] via-[#3A4750] to-[#EEEEEE];
+    @apply bg-clip-text text-transparent bg-gradient-to-r from-[#00ADB5] to-[#EEEEEE];
   }
 
   .text-inverse {

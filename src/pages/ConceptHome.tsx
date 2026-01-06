@@ -1,5 +1,7 @@
 import { motion } from 'framer-motion'
 import { Link } from 'react-router-dom'
+import { useEffect, useMemo, useState } from 'react'
+import { FiChevronLeft, FiChevronRight } from 'react-icons/fi'
 
 // --- USER CONFIGURATION ---
 // Paste your specific image URLs here to replace the placeholders
@@ -8,31 +10,84 @@ const SLIDES = [
         id: 'intro',
         title: 'Dan Sullivan',
         subtitle: 'Photographer',
-        image: '/default-hero.png', // Fallback
+        images: ['https://ik.imagekit.io/dmsully/_MG_4017%20(1).JPG?updatedAt=1765570239624'],
         isMain: true
     },
     {
         id: 'portraits',
         title: 'PORTRAITS',
         subtitle: 'Senior Photos • Business Headshots',
-        image: '/default-hero.png', // Fallback
+        images: [
+            'https://ik.imagekit.io/dmsully/DS252153.jpg?updatedAt=1767658772217',
+            'https://ik.imagekit.io/dmsully/DS252112.jpg?updatedAt=1767658772112',
+            'https://ik.imagekit.io/dmsully/_MG_4017%20(1).JPG?updatedAt=1765570239624',
+        ],
     },
     {
         id: 'events',
         title: 'EVENTS',
         subtitle: 'Weddings • Corporate Events • Sports',
-        image: '/default-hero.png', // Fallback
+        images: [
+            'https://ik.imagekit.io/dmsully/_MG_4396.png?updatedAt=1765570258586',
+            'https://ik.imagekit.io/dmsully/RKB10507.png?updatedAt=1765570245001',
+        ],
     },
     {
         id: 'more',
         title: '& MORE',
         subtitle: 'Drone Photography/Videography • Pets • Advertising',
-        image: '/default-hero.png', // Fallback
+        images: ['https://ik.imagekit.io/dmsully/_MG_4017%20(1).JPG?updatedAt=1765570239624'],
         showCta: true
     }
 ]
 
 export function ConceptHome() {
+    const slideCount = SLIDES.length
+    const initialIndices = useMemo(
+        () => SLIDES.map(() => 0),
+        []
+    )
+    const [activeIndices, setActiveIndices] = useState<number[]>(initialIndices)
+
+    useEffect(() => {
+        const intervals = SLIDES.map((slide, slideIndex) => {
+            if (slide.images.length <= 1) return null
+            return window.setInterval(() => {
+                setActiveIndices((prev) => {
+                    const next = [...prev]
+                    next[slideIndex] = (next[slideIndex] + 1) % slide.images.length
+                    return next
+                })
+            }, 4500)
+        })
+
+        return () => {
+            intervals.forEach((intervalId) => {
+                if (intervalId) {
+                    window.clearInterval(intervalId)
+                }
+            })
+        }
+    }, [])
+
+    const handlePrev = (slideIndex: number) => {
+        setActiveIndices((prev) => {
+            const next = [...prev]
+            const slideImages = SLIDES[slideIndex].images
+            next[slideIndex] = (next[slideIndex] - 1 + slideImages.length) % slideImages.length
+            return next
+        })
+    }
+
+    const handleNext = (slideIndex: number) => {
+        setActiveIndices((prev) => {
+            const next = [...prev]
+            const slideImages = SLIDES[slideIndex].images
+            next[slideIndex] = (next[slideIndex] + 1) % slideImages.length
+            return next
+        })
+    }
+
     return (
         <div className="h-screen w-full overflow-y-scroll snap-y snap-mandatory bg-[#303841] text-[#EEEEEE]">
 
@@ -44,11 +99,32 @@ export function ConceptHome() {
                         {/* Background Overlay for Depth - using Teal accent */}
                         <div className="absolute inset-0 bg-[#00ADB5]/10 z-10 pointer-events-none mix-blend-multiply transition-opacity duration-500 group-hover:opacity-0" />
 
+                        {slide.images.length > 1 && (
+                            <>
+                                <button
+                                    type="button"
+                                    onClick={() => handlePrev(index)}
+                                    className="absolute left-4 top-1/2 z-20 -translate-y-1/2 rounded-full border border-white/40 bg-black/30 p-3 text-white transition hover:bg-black/50"
+                                    aria-label="Previous photo"
+                                >
+                                    <FiChevronLeft className="h-6 w-6" />
+                                </button>
+                                <button
+                                    type="button"
+                                    onClick={() => handleNext(index)}
+                                    className="absolute right-4 top-1/2 z-20 -translate-y-1/2 rounded-full border border-white/40 bg-black/30 p-3 text-white transition hover:bg-black/50"
+                                    aria-label="Next photo"
+                                >
+                                    <FiChevronRight className="h-6 w-6" />
+                                </button>
+                            </>
+                        )}
+
                         <motion.img
                             initial={index === 0 ? { scale: 1.1, opacity: 0 } : undefined}
                             animate={index === 0 ? { scale: 1, opacity: 1 } : undefined}
                             transition={{ duration: 1.5 }}
-                            src={slide.image}
+                            src={slide.images[activeIndices[index]]}
                             alt={slide.title}
                             className="w-full h-full object-cover grayscale transition-all duration-700 ease-in-out group-hover:grayscale-0 group-hover:scale-105"
                         />
