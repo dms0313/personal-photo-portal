@@ -23,13 +23,13 @@ function App() {
 
       <main className="flex-grow">
         <Routes>
-          <Route path="/" element={<Home />} />
+          <Route path="/" element={<ConceptHome />} />
 
           <Route path="/services" element={<ServicesPage />} />
           <Route path="/gallery" element={<GalleryPage />} />
           <Route path="/booking" element={<BookingPage />} />
           <Route path="/login" element={<LoginPage />} />
-          <Route path="/concept" element={<ConceptHome />} />
+          <Route path="/concept" element={<Home />} />
         </Routes>
 
       </main>
