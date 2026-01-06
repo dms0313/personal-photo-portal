@@ -39,18 +39,18 @@ function App() {
       {/* Footer */}
       <footer className="py-12">
         <div className="mx-auto flex max-w-4xl flex-col items-center gap-6 px-4">
-          <div className="flex gap-8">
-            <a href="#" className="group rounded-full p-3 transition-colors hover:bg-white/10">
+          <div className="flex gap-8 text-[#1f2a33]">
+            <a href="#" className="group rounded-full p-3 transition-colors hover:bg-black/5">
               <FiInstagram className="h-6 w-6 transition-colors group-hover:text-[#00ADB5]" />
             </a>
-            <a href="#" className="group rounded-full p-3 transition-colors hover:bg-white/10">
+            <a href="#" className="group rounded-full p-3 transition-colors hover:bg-black/5">
               <FiTwitter className="h-6 w-6 transition-colors group-hover:text-[#00ADB5]" />
             </a>
-            <a href="#" className="group rounded-full p-3 transition-colors hover:bg-white/10">
+            <a href="#" className="group rounded-full p-3 transition-colors hover:bg-black/5">
               <FiMail className="h-6 w-6 transition-colors group-hover:text-[#00ADB5]" />
             </a>
           </div>
-          <p className="text-sm text-[#3A4750]">© 2026 Dan Sullivan Photography. All rights reserved.</p>
+          <p className="text-sm text-[#1f2a33]/70">© 2026 Dan Sullivan Photography. All rights reserved.</p>
         </div>
       </footer>
     </div>
