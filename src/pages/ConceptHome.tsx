@@ -42,7 +42,6 @@ const SLIDES = [
 ]
 
 export function ConceptHome() {
-    const slideCount = SLIDES.length
     const initialIndices = useMemo(
         () => SLIDES.map(() => 0),
         []
