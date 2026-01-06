@@ -136,10 +136,10 @@ function CarouselSlide({ slide, index }: { slide: typeof SLIDES[0], index: numbe
                         transition={{ delay: 1, duration: 1 }}
                         className="flex flex-col items-center text-white"
                     >
-                        <h1 className="text-[12vw] leading-[0.8] font-bold tracking-tighter text-center uppercase whitespace-nowrap drop-shadow-[0_2px_10px_rgba(0,0,0,0.5)]">
+                        <h1 className="text-[12vw] leading-[0.8] font-bold tracking-tighter text-center uppercase whitespace-nowrap">
                             {slide.title}
                         </h1>
-                        <p className="text-[4vw] font-light tracking-[0.5em] text-center uppercase mt-2 md:mt-6 drop-shadow-md">
+                        <p className="text-[4vw] font-light tracking-[0.5em] text-center uppercase mt-2 md:mt-6">
                             {slide.subtitle}
                         </p>
                     </motion.div>
@@ -147,11 +147,11 @@ function CarouselSlide({ slide, index }: { slide: typeof SLIDES[0], index: numbe
                     // Category Header Styling
                     <div className="flex flex-col items-center text-white overflow-hidden">
                         {/* Animate IN from Side (Left) */}
-                        <h2 className="text-6xl md:text-8xl font-bold tracking-tighter uppercase text-center opacity-0 group-hover:opacity-100 transform -translate-x-full group-hover:translate-x-0 transition-all duration-700 ease-out drop-shadow-[0_4px_20px_rgba(0,0,0,0.5)]">
+                        <h2 className="text-6xl md:text-8xl font-bold tracking-tighter uppercase text-center opacity-0 group-hover:opacity-100 transform -translate-x-full group-hover:translate-x-0 transition-all duration-700 ease-out">
                             {slide.title}
                         </h2>
                         {/* Animate IN from Side (Right) */}
-                        <p className="text-xl md:text-3xl font-light tracking-[0.1em] uppercase mt-4 opacity-0 group-hover:opacity-100 transform translate-x-full group-hover:translate-x-0 transition-all duration-700 delay-100 ease-out drop-shadow-md">
+                        <p className="text-xl md:text-3xl font-light tracking-[0.1em] uppercase mt-4 opacity-0 group-hover:opacity-100 transform translate-x-full group-hover:translate-x-0 transition-all duration-700 delay-100 ease-out">
                             {slide.subtitle}
                         </p>
                     </div>
