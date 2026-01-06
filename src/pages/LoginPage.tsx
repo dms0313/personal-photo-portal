@@ -19,16 +19,16 @@ export function LoginPage() {
     const [uploadMode, setUploadMode] = useState<'url' | 'file' | 'bulk'>('file')
     const [imageUrl, setImageUrl] = useState('')
     const [bulkUrls, setBulkUrls] = useState('')
-    const [showFeaturedOnly, setShowFeaturedOnly] = useState(false)
+    // const [showFeaturedOnly, setShowFeaturedOnly] = useState(false)
 
     const { login, logout, isAuthenticated, loginError, ownerEmail } = useAuthStore()
     const { photos, addPhoto, updatePhoto } = useGalleryStore()
 
-    const featuredCount = useMemo(() => photos.filter((photo) => photo.is_featured).length, [photos])
-    const visiblePhotos = useMemo(
-        () => (showFeaturedOnly ? photos.filter((photo) => photo.is_featured) : photos),
-        [photos, showFeaturedOnly]
-    )
+    // const featuredCount = useMemo(() => photos.filter((photo) => photo.is_featured).length, [photos])
+    // const visiblePhotos = useMemo(
+    //     () => (showFeaturedOnly ? photos.filter((photo) => photo.is_featured) : photos),
+    //     [photos, showFeaturedOnly]
+    // )
 
     useEffect(() => {
         return () => {
