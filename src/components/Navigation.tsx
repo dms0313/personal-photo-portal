@@ -25,7 +25,7 @@ export function Navigation() {
             initial={{ y: -100, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
             transition={{ duration: 0.8, ease: "easeOut" }}
-            className="fixed top-0 left-0 right-0 z-50 bg-black px-6 py-4 flex justify-between items-center shadow-lg"
+            className="fixed top-0 left-0 right-0 z-50 bg-black/50 backdrop-blur-md px-6 py-4 flex justify-between items-center shadow-lg"
         >
             <Link to="/" className="text-xl font-bold tracking-tighter z-50 relative text-white">
                 DAN<span className="text-gradient">SULLIVAN</span>
