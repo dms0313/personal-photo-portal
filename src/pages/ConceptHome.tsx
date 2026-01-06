@@ -19,14 +19,14 @@ const SLIDES = [
     },
     {
         id: 'events',
-        title: 'WEDDINGS & EVENTS',
+        title: 'EVENTS',
         subtitle: 'Weddings • Corporate Events • Sports',
         image: '/default-hero.png', // Fallback
     },
     {
         id: 'more',
         title: '& MORE',
-        subtitle: 'Drone • Pets • Advertising',
+        subtitle: 'Drone Photography/Videography • Pets • Advertising',
         image: '/default-hero.png', // Fallback
         showCta: true
     }
@@ -34,13 +34,13 @@ const SLIDES = [
 
 export function ConceptHome() {
     return (
-        <div className="h-screen w-full overflow-y-scroll snap-y snap-mandatory bg-[#EEEEEE] text-[#303841]">
+        <div className="h-screen w-full overflow-y-scroll snap-y snap-mandatory bg-[#303841] text-[#EEEEEE]">
 
             {SLIDES.map((slide, index) => (
                 <section key={slide.id} className="relative h-screen w-full snap-start flex flex-col items-center justify-center py-12 px-6 md:px-12 group">
 
                     {/* Image Container with Padding */}
-                    <div className="relative w-full h-[85%] max-w-7xl overflow-hidden shadow-2xl bg-white">
+                    <div className="relative w-full h-[85%] max-w-7xl overflow-hidden shadow-2xl bg-[#3A4750]">
                         {/* Background Overlay for Depth - using Teal accent */}
                         <div className="absolute inset-0 bg-[#00ADB5]/10 z-10 pointer-events-none mix-blend-multiply transition-opacity duration-500 group-hover:opacity-0" />
 
@@ -63,7 +63,7 @@ export function ConceptHome() {
                                 initial={{ opacity: 0, y: 30 }}
                                 animate={{ opacity: 1, y: 0 }}
                                 transition={{ delay: 1, duration: 1 }}
-                                className="flex flex-col items-center mix-blend-difference text-white"
+                                className="flex flex-col items-center text-inverse"
                             >
                                 <h1 className="text-[12vw] leading-[0.8] font-bold tracking-tighter text-center uppercase whitespace-nowrap">
                                     {slide.title}
@@ -76,10 +76,10 @@ export function ConceptHome() {
                             // Category Header Styling
                             <div className="flex flex-col items-center">
                                 {/* Use pure white text with difference mode to ensure visibility against ANY background */}
-                                <h2 className="text-6xl md:text-8xl font-bold tracking-tighter uppercase text-center opacity-0 group-hover:opacity-100 transition-opacity duration-500 transform translate-y-4 group-hover:translate-y-0 mix-blend-difference text-white">
+                                <h2 className="text-6xl md:text-8xl font-bold tracking-tighter uppercase text-center opacity-0 group-hover:opacity-100 transition-opacity duration-500 transform translate-y-4 group-hover:translate-y-0 text-inverse">
                                     {slide.title}
                                 </h2>
-                                <p className="text-xl md:text-3xl font-light tracking-[0.1em] uppercase mt-4 opacity-0 group-hover:opacity-100 transition-opacity duration-700 delay-100 transform translate-y-4 group-hover:translate-y-0 text-[#00ADB5] bg-[#303841]/80 px-4 py-2 rounded-full backdrop-blur-md">
+                                <p className="text-xl md:text-3xl font-light tracking-[0.1em] uppercase mt-4 opacity-0 group-hover:opacity-100 transition-opacity duration-700 delay-100 transform translate-y-4 group-hover:translate-y-0 text-[#EEEEEE] bg-[#3A4750]/80 px-4 py-2 rounded-full backdrop-blur-md">
                                     {slide.subtitle}
                                 </p>
                             </div>
@@ -89,7 +89,7 @@ export function ConceptHome() {
                         {slide.showCta && (
                             <div className="mt-12 pointer-events-auto opacity-0 group-hover:opacity-100 transition-all duration-700 delay-200">
                                 <Link to="/booking">
-                                    <button className="px-10 py-4 border-2 border-[#303841] bg-[#303841] text-[#EEEEEE] text-xl tracking-widest uppercase hover:bg-[#00ADB5] hover:border-[#00ADB5] hover:text-white transition-all duration-300 shadow-xl">
+                                    <button className="px-10 py-4 border-2 border-[#00ADB5] bg-[#00ADB5] text-[#303841] text-xl tracking-widest uppercase hover:bg-[#EEEEEE] hover:border-[#EEEEEE] hover:text-[#303841] transition-all duration-300 shadow-xl">
                                         Book Now
                                     </button>
                                 </Link>
@@ -99,7 +99,7 @@ export function ConceptHome() {
                 </section>
             ))}
 
-            <div className="fixed bottom-8 left-1/2 -translate-x-1/2 text-[#303841] animate-bounce pointer-events-none z-30">
+            <div className="fixed bottom-8 left-1/2 -translate-x-1/2 text-[#EEEEEE] animate-bounce pointer-events-none z-30">
                 <span className="text-xs uppercase tracking-[0.3em]">Scroll</span>
             </div>
 

@@ -32,7 +32,7 @@ export function Home() {
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
                         transition={{ delay: 0.5, duration: 2.2 }}
-                        className="text-xl md:text-3xl text-gray-100 font-light tracking-widest uppercase mb-8"
+                        className="text-xl md:text-3xl text-[#EEEEEE]/80 font-light tracking-widest uppercase mb-8"
                     >
                         PROFESSIONAL PHOTOGRAPHER
                     </motion.p>
@@ -70,7 +70,7 @@ export function Home() {
                         document.getElementById('featured-gallery')?.scrollIntoView({ behavior: 'smooth' });
                     }}
                 >
-                    <FiArrowDown className="w-6 h-6 text-gray-500 hover:text-white transition-colors" />
+                    <FiArrowDown className="w-6 h-6 text-[#3A4750] hover:text-[#EEEEEE] transition-colors" />
                 </motion.div>
             </section>
 

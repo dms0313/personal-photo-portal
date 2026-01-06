@@ -93,7 +93,7 @@ export function BookingPage() {
                     <h1 className="text-4xl md:text-6xl font-bold tracking-tighter mb-4">
                         BOOK A <span className="text-gradient">SESSION</span>
                     </h1>
-                    <p className="text-gray-400 text-lg max-w-2xl mx-auto">
+                    <p className="text-[#EEEEEE]/70 text-lg max-w-2xl mx-auto">
                         Select a date below to get started. We'll confirm your appointment via email.
                     </p>
                 </div>
@@ -112,11 +112,11 @@ export function BookingPage() {
                     <div className="lg:col-span-1">
                         <motion.div
                             layout
-                            className={`bg-black/40 backdrop-blur-md rounded-2xl border border-white/10 p-6 h-full ${!selectedDate ? 'opacity-50 pointer-events-none grayscale' : ''}`}
+                            className={`bg-[#3A4750]/40 backdrop-blur-md rounded-2xl border border-white/10 p-6 h-full ${!selectedDate ? 'opacity-50 pointer-events-none grayscale' : ''}`}
                         >
                             {!isSubmitted ? (
                                 <form onSubmit={handleSubmit} className="space-y-6">
-                                    <h3 className="text-xl font-bold text-white mb-6">
+                                    <h3 className="text-xl font-bold text-[#EEEEEE] mb-6">
                                         {selectedDate
                                             ? `Booking for ${selectedDate.toLocaleDateString()}`
                                             : 'Select a date first'
@@ -125,10 +125,10 @@ export function BookingPage() {
 
                                     {/* Service Selection Display */}
                                     <div>
-                                        <label className="block text-sm font-medium text-gray-400 mb-2">Service Type</label>
+                                        <label className="block text-sm font-medium text-[#EEEEEE]/70 mb-2">Service Type</label>
                                         <input
                                             type="text"
-                                            className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-blue-300 font-semibold focus:outline-none focus:border-purple-500 transition-colors"
+                                            className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-[#EEEEEE] font-semibold focus:outline-none focus:border-[#00ADB5] transition-colors"
                                             value={formState.service}
                                             onChange={e => setFormState({ ...formState, service: e.target.value })}
                                             placeholder="General Inquiry (or select from Services page)"
@@ -136,32 +136,32 @@ export function BookingPage() {
                                     </div>
 
                                     <div>
-                                        <label className="block text-sm font-medium text-gray-400 mb-2">Name</label>
+                                        <label className="block text-sm font-medium text-[#EEEEEE]/70 mb-2">Name</label>
                                         <input
                                             type="text"
                                             required
-                                            className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-purple-500 transition-colors"
+                                            className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-[#EEEEEE] focus:outline-none focus:border-[#00ADB5] transition-colors"
                                             value={formState.name}
                                             onChange={e => setFormState({ ...formState, name: e.target.value })}
                                         />
                                     </div>
 
                                     <div>
-                                        <label className="block text-sm font-medium text-gray-400 mb-2">Email</label>
+                                        <label className="block text-sm font-medium text-[#EEEEEE]/70 mb-2">Email</label>
                                         <input
                                             type="email"
                                             required
-                                            className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-purple-500 transition-colors"
+                                            className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-[#EEEEEE] focus:outline-none focus:border-[#00ADB5] transition-colors"
                                             value={formState.email}
                                             onChange={e => setFormState({ ...formState, email: e.target.value })}
                                         />
                                     </div>
 
                                     <div>
-                                        <label className="block text-sm font-medium text-gray-400 mb-2">Message (Optional)</label>
+                                        <label className="block text-sm font-medium text-[#EEEEEE]/70 mb-2">Message (Optional)</label>
                                         <textarea
                                             rows={4}
-                                            className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-purple-500 transition-colors"
+                                            className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-[#EEEEEE] focus:outline-none focus:border-[#00ADB5] transition-colors"
                                             value={formState.message}
                                             onChange={e => setFormState({ ...formState, message: e.target.value })}
                                         />
@@ -170,18 +170,18 @@ export function BookingPage() {
                                     <button
                                         type="submit"
                                         disabled={isSubmitting}
-                                        className="w-full py-4 rounded-lg bg-gradient-to-r from-blue-600 to-purple-600 text-white font-bold tracking-wide hover:opacity-90 transition-opacity disabled:opacity-50 disabled:cursor-not-allowed"
+                                        className="w-full py-4 rounded-lg bg-gradient-to-r from-[#00ADB5] to-[#EEEEEE] text-[#303841] font-bold tracking-wide hover:opacity-90 transition-opacity disabled:opacity-50 disabled:cursor-not-allowed"
                                     >
                                         {isSubmitting ? 'BOOKING...' : 'CONFIRM BOOKING'}
                                     </button>
                                 </form>
                             ) : (
                                 <div className="h-full flex flex-col items-center justify-center text-center py-12">
-                                    <div className="w-16 h-16 bg-green-500/20 rounded-full flex items-center justify-center mb-6">
-                                        <FiCheck className="w-8 h-8 text-green-500" />
+                                    <div className="w-16 h-16 bg-[#00ADB5]/20 rounded-full flex items-center justify-center mb-6">
+                                        <FiCheck className="w-8 h-8 text-[#00ADB5]" />
                                     </div>
-                                    <h3 className="text-2xl font-bold text-white mb-2">Request Sent!</h3>
-                                    <p className="text-gray-400">
+                                    <h3 className="text-2xl font-bold text-[#EEEEEE] mb-2">Request Sent!</h3>
+                                    <p className="text-[#EEEEEE]/70">
                                         We'll be in touch shortly to confirm your session on {selectedDate?.toLocaleDateString()}.
                                     </p>
                                 </div>

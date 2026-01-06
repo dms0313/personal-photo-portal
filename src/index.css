@@ -10,9 +10,9 @@
 
 :root {
   /* Site-wide Color Palette */
-  --background: #EEEEEE; /* Light Background */
-  --foreground: #303841; /* Dark Text */
-  
+  --background: #303841; /* Deep slate */
+  --foreground: #EEEEEE; /* Soft light */
+
   /* Palette definitions */
   --color-dark: #303841;
   --color-gray: #3A4750;
@@ -23,7 +23,7 @@
   --accent: #00ADB5;
   --muted: #3A4750;
 
-  color-scheme: light;
+  color-scheme: dark;
 }
 
 @layer base {
@@ -47,7 +47,12 @@
   }
 
   .text-gradient {
-    @apply bg-clip-text text-transparent bg-gradient-to-r from-blue-400 via-purple-500 to-pink-500;
+    @apply bg-clip-text text-transparent bg-gradient-to-r from-[#00ADB5] via-[#3A4750] to-[#EEEEEE];
+  }
+
+  .text-inverse {
+    color: #EEEEEE;
+    mix-blend-mode: difference;
   }
 }
 
@@ -71,12 +76,12 @@
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #333;
+  background: #3A4750;
   border-radius: 4px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #555;
+  background: #00ADB5;
 }
 
 /* Custom Cursor */
@@ -97,7 +102,7 @@
   .cursor-dot {
     width: 12px;
     height: 12px;
-    background: linear-gradient(to right, #60a5fa, #a855f7, #ec4899);
+    background: linear-gradient(to right, #00ADB5, #EEEEEE);
     border-radius: 50%;
     transform: translate(-50%, -50%);
   }
@@ -173,11 +178,11 @@
 
   0%,
   100% {
-    box-shadow: 0 0 20px rgba(59, 130, 246, 0.3), 0 0 40px rgba(139, 92, 246, 0.2);
+    box-shadow: 0 0 20px rgba(0, 173, 181, 0.25), 0 0 40px rgba(58, 71, 80, 0.2);
   }
 
   50% {
-    box-shadow: 0 0 30px rgba(59, 130, 246, 0.5), 0 0 60px rgba(139, 92, 246, 0.3);
+    box-shadow: 0 0 30px rgba(0, 173, 181, 0.45), 0 0 60px rgba(58, 71, 80, 0.35);
   }
 }
 
