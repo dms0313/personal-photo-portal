@@ -41,16 +41,16 @@ function App() {
         <div className="mx-auto flex max-w-4xl flex-col items-center gap-6 px-4">
           <div className="flex gap-8">
             <a href="#" className="group rounded-full p-3 transition-colors hover:bg-white/10">
-              <FiInstagram className="h-6 w-6 transition-colors group-hover:text-pink-500" />
+              <FiInstagram className="h-6 w-6 transition-colors group-hover:text-[#00ADB5]" />
             </a>
             <a href="#" className="group rounded-full p-3 transition-colors hover:bg-white/10">
-              <FiTwitter className="h-6 w-6 transition-colors group-hover:text-blue-400" />
+              <FiTwitter className="h-6 w-6 transition-colors group-hover:text-[#00ADB5]" />
             </a>
             <a href="#" className="group rounded-full p-3 transition-colors hover:bg-white/10">
-              <FiMail className="h-6 w-6 transition-colors group-hover:text-purple-400" />
+              <FiMail className="h-6 w-6 transition-colors group-hover:text-[#00ADB5]" />
             </a>
           </div>
-          <p className="text-sm text-gray-500">© 2026 Dan Sullivan Photography. All rights reserved.</p>
+          <p className="text-sm text-[#3A4750]">© 2026 Dan Sullivan Photography. All rights reserved.</p>
         </div>
       </footer>
     </div>

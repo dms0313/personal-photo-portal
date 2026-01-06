@@ -75,7 +75,7 @@ export function ServicesPage() {
                     <h1 className="text-4xl md:text-6xl font-bold tracking-tighter mb-4">
                         OUR <span className="text-gradient">SERVICES</span>
                     </h1>
-                    <p className="text-gray-400 text-lg max-w-2xl mx-auto">
+                    <p className="text-[#EEEEEE]/70 text-lg max-w-2xl mx-auto">
                         Choose the perfect package for your needs. Simple pricing, exceptional results.
                     </p>
                 </div>
@@ -84,7 +84,7 @@ export function ServicesPage() {
                     {services.map((service) => (
                         <motion.div
                             key={service.id}
-                            className="bg-black/40 backdrop-blur-md rounded-2xl border border-white/10 overflow-hidden"
+                            className="bg-[#3A4750]/40 backdrop-blur-md rounded-2xl border border-white/10 overflow-hidden"
                             initial={false}
                         >
                             <button
@@ -92,18 +92,18 @@ export function ServicesPage() {
                                 className="w-full flex items-center justify-between p-6 text-left hover:bg-white/5 transition-colors"
                             >
                                 <div className="flex items-center gap-4">
-                                    <div className={`p-3 rounded-full bg-white/5 text-2xl ${expanded === service.id ? 'text-blue-400' : 'text-gray-400'}`}>
+                                    <div className={`p-3 rounded-full bg-white/5 text-2xl ${expanded === service.id ? 'text-[#00ADB5]' : 'text-[#EEEEEE]/70'}`}>
                                         {service.icon}
                                     </div>
                                     <div>
                                         <h3 className="text-2xl font-bold tracking-wide text-white">{service.title}</h3>
-                                        <p className="text-sm text-gray-400">{service.description}</p>
+                                        <p className="text-sm text-[#EEEEEE]/70">{service.description}</p>
                                     </div>
                                 </div>
                                 <motion.div
                                     animate={{ rotate: expanded === service.id ? 180 : 0 }}
                                     transition={{ duration: 0.2 }}
-                                    className="text-gray-400"
+                                    className="text-[#EEEEEE]/70"
                                 >
                                     <FiChevronDown size={24} />
                                 </motion.div>
@@ -122,13 +122,13 @@ export function ServicesPage() {
                                                 <div key={index} className="flex flex-col md:flex-row md:items-center justify-between gap-4 p-4 rounded-xl bg-white/5 border border-white/5 hover:border-white/20 transition-all">
                                                     <div>
                                                         <h4 className="text-lg font-bold text-white">{option.label}</h4>
-                                                        <p className="text-sm text-gray-400">{option.details}</p>
+                                                        <p className="text-sm text-[#EEEEEE]/70">{option.details}</p>
                                                     </div>
                                                     <div className="flex items-center gap-6">
-                                                        <span className="text-xl font-bold text-white">{option.price}</span>
+                                                        <span className="text-xl font-bold text-[#EEEEEE]">{option.price}</span>
                                                         <Link
                                                             to={`/booking?service=${encodeURIComponent(option.value)}`}
-                                                            className="px-6 py-2 rounded-lg bg-white text-black font-bold text-sm tracking-wide hover:bg-gray-200 transition-colors"
+                                                            className="px-6 py-2 rounded-lg bg-[#00ADB5] text-[#303841] font-bold text-sm tracking-wide hover:bg-[#EEEEEE] transition-colors"
                                                         >
                                                             BOOK NOW
                                                         </Link>

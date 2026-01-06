@@ -47,9 +47,9 @@ export function Calendar({ onDateSelect, selectedDate, blockedDates = [] }: Cale
     };
 
     return (
-        <div className="w-full max-w-4xl mx-auto bg-black/40 backdrop-blur-md rounded-2xl border border-white/10 p-6">
+        <div className="w-full max-w-4xl mx-auto bg-[#3A4750]/40 backdrop-blur-md rounded-2xl border border-white/10 p-6">
             <div className="flex justify-between items-center mb-6">
-                <h2 className="text-2xl font-bold tracking-tight text-white">Select a Date</h2>
+                <h2 className="text-2xl font-bold tracking-tight text-[#EEEEEE]">Select a Date</h2>
                 <div className="flex gap-2">
                     <button onClick={prevMonth} className="p-2 hover:bg-white/10 rounded-full transition-colors">
                         <FiChevronLeft className="w-5 h-5" />
@@ -67,8 +67,8 @@ export function Calendar({ onDateSelect, selectedDate, blockedDates = [] }: Cale
 
                     return (
                         <div key={index} className="flex flex-col">
-                            <h3 className="text-lg font-medium text-gray-300 mb-4 text-center">{monthName}</h3>
-                            <div className="grid grid-cols-7 gap-1 text-center text-sm mb-2 text-gray-500">
+                            <h3 className="text-lg font-medium text-[#EEEEEE]/80 mb-4 text-center">{monthName}</h3>
+                            <div className="grid grid-cols-7 gap-1 text-center text-sm mb-2 text-[#3A4750]">
                                 {['S', 'M', 'T', 'W', 'T', 'F', 'S'].map((d, i) => <span key={i}>{d}</span>)}
                             </div>
                             <div className="grid grid-cols-7 gap-1">
@@ -89,8 +89,8 @@ export function Calendar({ onDateSelect, selectedDate, blockedDates = [] }: Cale
                                             onClick={() => onDateSelect(date)}
                                             className={`
                         aspect-square rounded-full flex items-center justify-center text-sm transition-all
-                        ${isDisabled ? 'text-gray-700 cursor-not-allowed decoration-slice line-through opacity-50' : 'hover:bg-white/20 text-gray-200'}
-                        ${isSelected ? 'bg-gradient-to-r from-blue-500 to-purple-600 text-white font-bold shadow-lg scale-110' : ''}
+                        ${isDisabled ? 'text-[#3A4750] cursor-not-allowed decoration-slice line-through opacity-50' : 'hover:bg-white/20 text-[#EEEEEE]'}
+                        ${isSelected ? 'bg-gradient-to-r from-[#00ADB5] to-[#EEEEEE] text-[#303841] font-bold shadow-lg scale-110' : ''}
                         ${isBlocked && !isPast ? 'bg-red-900/20 text-red-500/50' : ''} 
                       `}
                                         >
