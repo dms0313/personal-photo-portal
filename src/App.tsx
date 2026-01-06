@@ -10,7 +10,7 @@ import { Home } from './pages/Home'
 import { LoginPage } from './pages/LoginPage'
 
 import { ServicesPage } from './pages/ServicesPage'
-
+import { ConceptHome } from './pages/ConceptHome'
 import { Background } from './components/Background'
 
 function App() {
@@ -24,11 +24,14 @@ function App() {
       <main className="flex-grow">
         <Routes>
           <Route path="/" element={<Home />} />
+
           <Route path="/services" element={<ServicesPage />} />
           <Route path="/gallery" element={<GalleryPage />} />
           <Route path="/booking" element={<BookingPage />} />
           <Route path="/login" element={<LoginPage />} />
+          <Route path="/concept" element={<ConceptHome />} />
         </Routes>
+
       </main>
 
 
