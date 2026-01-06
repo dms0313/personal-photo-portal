@@ -50,7 +50,7 @@ function App() {
               <FiMail className="h-6 w-6 transition-colors group-hover:text-purple-400" />
             </a>
           </div>
-          <p className="text-sm text-gray-500">© 2024 Dan Sullivan Photography. All rights reserved.</p>
+          <p className="text-sm text-gray-500">© 2026 Dan Sullivan Photography. All rights reserved.</p>
         </div>
       </footer>
     </div>

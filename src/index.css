@@ -9,15 +9,21 @@
 }
 
 :root {
-  /* Default to Dark Mode aesthetics directly */
-  --background: transparent;
-  /* Changed to transparent for fixed bg */
-  --foreground: #ededed;
-  --primary: #ffffff;
-  --accent: #3b82f6;
-  --muted: #262626;
+  /* Site-wide Color Palette */
+  --background: #EEEEEE; /* Light Background */
+  --foreground: #303841; /* Dark Text */
+  
+  /* Palette definitions */
+  --color-dark: #303841;
+  --color-gray: #3A4750;
+  --color-teal: #00ADB5;
+  --color-light: #EEEEEE;
 
-  color-scheme: dark;
+  --primary: #303841;
+  --accent: #00ADB5;
+  --muted: #3A4750;
+
+  color-scheme: light;
 }
 
 @layer base {
