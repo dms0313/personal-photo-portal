@@ -27,3 +27,4 @@ service-account.json
 service-account-copy.json
 *.json
 .env*
+.prettierrc

@@ -10,18 +10,20 @@
 
 :root {
   /* Site-wide Color Palette */
-  --background: #ffffff; /* Crisp white */
-  --foreground: #1f2a33; /* Deep slate */
+  --background: #F6F1F1;
+  /* Warm light */
+  --foreground: #000000;
+  /* True black */
 
   /* Palette definitions */
-  --color-dark: #1f2a33;
-  --color-gray: #dfe6ec;
-  --color-teal: #00ADB5;
-  --color-light: #f7f9fb;
+  --color-dark: #000000;
+  --color-gray: #F6F1F1;
+  --color-teal: #19A7CE;
+  --color-light: #F6F1F1;
 
-  --primary: #1f2a33;
-  --accent: #00ADB5;
-  --muted: #dfe6ec;
+  --primary: #146C94;
+  --accent: #19A7CE;
+  --muted: #F6F1F1;
 
   color-scheme: light;
 }
@@ -31,7 +33,7 @@
   html,
   body,
   #root {
-    @apply relative h-full;
+    @apply relative h-full overflow-hidden;
   }
 
   body {
@@ -47,12 +49,27 @@
   }
 
   .text-gradient {
-    @apply bg-clip-text text-transparent bg-gradient-to-r from-[#00ADB5] to-[#EEEEEE];
+    @apply bg-clip-text text-transparent bg-gradient-to-r from-[#19A7CE] to-black;
   }
 
   .text-inverse {
-    color: #EEEEEE;
+    color: #F6F1F1;
     mix-blend-mode: difference;
+  }
+
+  .hero-shatter {
+    width: min(90vw, 900px);
+  }
+
+  .hero-shatter svg {
+    width: 100%;
+    height: auto;
+  }
+
+  .hero-shatter svg > * {
+    fill: currentColor;
+    stroke: currentColor;
+    stroke-width: 0.85px;
   }
 }
 
@@ -81,7 +98,7 @@
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #00ADB5;
+  background: #19A7CE;
 }
 
 /* Custom Cursor */
@@ -102,7 +119,7 @@
   .cursor-dot {
     width: 12px;
     height: 12px;
-    background: linear-gradient(to right, #00ADB5, #1f2a33);
+    background: linear-gradient(to right, #19A7CE, #000000);
     border-radius: 50%;
     transform: translate(-50%, -50%);
   }
@@ -178,11 +195,11 @@
 
   0%,
   100% {
-    box-shadow: 0 0 20px rgba(0, 173, 181, 0.25), 0 0 40px rgba(58, 71, 80, 0.2);
+    box-shadow: 0 0 20px rgba(25, 167, 206, 0.25), 0 0 40px rgba(20, 108, 148, 0.2);
   }
 
   50% {
-    box-shadow: 0 0 30px rgba(0, 173, 181, 0.45), 0 0 60px rgba(58, 71, 80, 0.35);
+    box-shadow: 0 0 30px rgba(25, 167, 206, 0.45), 0 0 60px rgba(20, 108, 148, 0.35);
   }
 }
 

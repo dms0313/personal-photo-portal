@@ -19,16 +19,16 @@ export function LoginPage() {
     const [uploadMode, setUploadMode] = useState<'url' | 'file' | 'bulk'>('file')
     const [imageUrl, setImageUrl] = useState('')
     const [bulkUrls, setBulkUrls] = useState('')
-    const [showFeaturedOnly, setShowFeaturedOnly] = useState(false)
+    // const [showFeaturedOnly, setShowFeaturedOnly] = useState(false)
 
     const { login, logout, isAuthenticated, loginError, ownerEmail } = useAuthStore()
     const { photos, addPhoto, updatePhoto } = useGalleryStore()
 
-    const featuredCount = useMemo(() => photos.filter((photo) => photo.is_featured).length, [photos])
-    const visiblePhotos = useMemo(
-        () => (showFeaturedOnly ? photos.filter((photo) => photo.is_featured) : photos),
-        [photos, showFeaturedOnly]
-    )
+    // const featuredCount = useMemo(() => photos.filter((photo) => photo.is_featured).length, [photos])
+    // const visiblePhotos = useMemo(
+    //     () => (showFeaturedOnly ? photos.filter((photo) => photo.is_featured) : photos),
+    //     [photos, showFeaturedOnly]
+    // )
 
     useEffect(() => {
         return () => {
@@ -224,10 +224,10 @@ export function LoginPage() {
     const managementDisabled = useMemo(() => !isAuthenticated || Boolean(loginError), [isAuthenticated, loginError])
 
     return (
-        <div className="min-h-screen text-[#1f2a33] flex flex-col">
+        <div className="min-h-screen text-[#000000] flex flex-col">
             <div className={`mx-auto flex w-full max-w-5xl flex-col gap-10 px-6 ${isAuthenticated ? 'py-24 md:py-32' : 'flex-grow justify-center items-center'}`}>
                 <div className="space-y-3 text-center">
-                    <p className="text-sm uppercase tracking-[0.3em] text-[#1f2a33]/70 intro-fade-up intro-delay-1">Owner Access</p>
+                    <p className="text-sm uppercase tracking-[0.3em] text-[#000000]/70 intro-fade-up intro-delay-1">Owner Access</p>
                     <h1 className="text-4xl font-semibold tracking-tight md:text-5xl intro-fade-up intro-delay-2">
                         {isAuthenticated ? 'Management Dashboard' : 'Sign in'}
                     </h1>
@@ -237,15 +237,15 @@ export function LoginPage() {
                     initial={{ opacity: 0, y: 30, scale: 0.95 }}
                     animate={{ opacity: 1, y: 0, scale: 1 }}
                     transition={{ duration: 0.6, delay: 0.3, ease: [0.16, 1, 0.3, 1] }}
-                    className="w-full max-w-md mx-auto rounded-3xl border border-black/10 bg-white/80 p-8 shadow-2xl shadow-[#00ADB5]/10 backdrop-blur intro-glow"
+                    className="w-full max-w-md mx-auto rounded-3xl border border-black/10 bg-white/80 p-8 shadow-2xl shadow-[#19A7CE]/10 backdrop-blur intro-glow"
                 >
                     <div className="flex flex-col gap-6">
                         {!isAuthenticated ? (
                             <form className="space-y-4" onSubmit={handleSubmit}>
-                                <label className="block space-y-2 text-sm font-medium text-[#1f2a33]/80">
+                                <label className="block space-y-2 text-sm font-medium text-[#000000]/80">
                                     <input
                                         type="password"
-                                        className="w-full rounded-xl border border-black/10 bg-white px-4 py-3 text-[#1f2a33] outline-none transition focus:border-[#00ADB5] focus:ring-2 focus:ring-[#00ADB5]/30 text-center tracking-widest"
+                                        className="w-full rounded-xl border border-black/10 bg-white px-4 py-3 text-[#000000] outline-none transition focus:border-[#19A7CE] focus:ring-2 focus:ring-[#19A7CE]/30 text-center tracking-widest"
                                         placeholder="ENTER PASSCODE"
                                         value={passcode}
                                         onChange={(event) => setPasscode(event.target.value)}
@@ -258,7 +258,7 @@ export function LoginPage() {
 
                                 <button
                                     type="submit"
-                                    className="w-full rounded-xl bg-gradient-to-r from-[#00ADB5] to-[#cfd8df] px-6 py-3 text-sm font-semibold uppercase tracking-wide text-[#1f2a33] shadow-lg shadow-[#00ADB5]/25 transition hover:from-[#00ADB5]/90 hover:to-[#cfd8df]/90 focus:outline-none focus:ring-2 focus:ring-[#00ADB5]/50"
+                                    className="w-full rounded-xl bg-gradient-to-r from-[#19A7CE] to-[#F6F1F1] px-6 py-3 text-sm font-semibold uppercase tracking-wide text-[#000000] shadow-lg shadow-[#19A7CE]/25 transition hover:from-[#19A7CE]/90 hover:to-[#F6F1F1]/90 focus:outline-none focus:ring-2 focus:ring-[#19A7CE]/50"
                                 >
                                     Unlock
                                 </button>
@@ -267,17 +267,17 @@ export function LoginPage() {
                             <div className="space-y-6">
                                 <div className="flex items-center justify-between gap-4">
                                     <div>
-                                        <p className="text-sm font-medium text-[#1f2a33]/80">Signed in as</p>
-                                        <p className="text-lg font-semibold text-[#1f2a33]">{ownerEmail}</p>
+                                        <p className="text-sm font-medium text-[#000000]/80">Signed in as</p>
+                                        <p className="text-lg font-semibold text-[#000000]">{ownerEmail}</p>
                                     </div>
-                                    <span className="rounded-full bg-[#00ADB5]/15 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-[#00ADB5]">
+                                    <span className="rounded-full bg-[#19A7CE]/15 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-[#19A7CE]">
                                         Active
                                     </span>
                                 </div>
                                 <button
                                     type="button"
                                     onClick={logout}
-                                    className="w-full rounded-xl border border-black/20 px-6 py-3 text-sm font-semibold uppercase tracking-wide text-[#1f2a33]/80 transition hover:border-black/40 hover:text-[#1f2a33] focus:outline-none focus:ring-2 focus:ring-black/20"
+                                    className="w-full rounded-xl border border-black/20 px-6 py-3 text-sm font-semibold uppercase tracking-wide text-[#000000]/80 transition hover:border-black/40 hover:text-[#000000] focus:outline-none focus:ring-2 focus:ring-black/20"
                                 >
                                     Log out
                                 </button>
@@ -292,9 +292,9 @@ export function LoginPage() {
                             initial={{ opacity: 0, x: -40 }}
                             animate={{ opacity: 1, x: 0 }}
                             transition={{ duration: 0.5, delay: 0.5, ease: "easeOut" }}
-                            className="rounded-2xl border border-black/10 bg-white/80 p-6 text-sm text-[#1f2a33]/70 shadow-lg shadow-black/5"
+                            className="rounded-2xl border border-black/10 bg-white/80 p-6 text-sm text-[#000000]/70 shadow-lg shadow-black/5"
                         >
-                            <h2 className="mb-2 text-sm font-semibold text-[#1f2a33]">How this works</h2>
+                            <h2 className="mb-2 text-sm font-semibold text-[#000000]">How this works</h2>
                             <ul className="list-disc space-y-2 pl-4">
                                 <li>The owner passcode is stored in the environment as <code className="font-mono">VITE_OWNER_PASSWORD</code>.</li>
                                 <li>When you log in successfully, a private session is saved in your browser to keep you authenticated.</li>
@@ -306,18 +306,18 @@ export function LoginPage() {
                             initial={{ opacity: 0, y: 50 }}
                             animate={{ opacity: 1, y: 0 }}
                             transition={{ duration: 0.7, delay: 0.6, ease: [0.16, 1, 0.3, 1] }}
-                            className="rounded-3xl border border-black/10 bg-white/80 p-8 shadow-2xl shadow-[#00ADB5]/10 backdrop-blur space-y-6"
+                            className="rounded-3xl border border-black/10 bg-white/80 p-8 shadow-2xl shadow-[#19A7CE]/10 backdrop-blur space-y-6"
                         >
                             <div className="flex flex-col gap-2">
                                 <div className="flex items-center justify-between">
-                                    <p className="text-sm uppercase tracking-[0.3em] text-[#1f2a33]/70">Content management</p>
-                                    <span className="flex items-center gap-2 text-xs text-[#00ADB5]">
-                                        <span className="w-2 h-2 rounded-full bg-[#00ADB5]" />
+                                    <p className="text-sm uppercase tracking-[0.3em] text-[#000000]/70">Content management</p>
+                                    <span className="flex items-center gap-2 text-xs text-[#19A7CE]">
+                                        <span className="w-2 h-2 rounded-full bg-[#19A7CE]" />
                                         Auto-synced via Supabase
                                     </span>
                                 </div>
                                 <h2 className="text-2xl font-semibold">Upload new photos and edit descriptions</h2>
-                                <p className="text-[#1f2a33]/80 text-sm">
+                                <p className="text-[#000000]/80 text-sm">
                                     Photos are automatically uploaded to ImageKit and synced across all devices via Supabase.
                                 </p>
                             </div>
@@ -332,8 +332,8 @@ export function LoginPage() {
                                             type="button"
                                             onClick={() => setUploadMode('file')}
                                             className={`flex-1 px-4 py-2 rounded-lg text-sm font-medium transition ${uploadMode === 'file'
-                                                ? 'bg-gradient-to-r from-[#00ADB5] to-[#cfd8df] text-[#1f2a33] shadow-lg'
-                                                : 'text-[#1f2a33]/70 hover:text-[#1f2a33]'
+                                                ? 'bg-gradient-to-r from-[#19A7CE] to-[#F6F1F1] text-[#000000] shadow-lg'
+                                                : 'text-[#000000]/70 hover:text-[#000000]'
                                                 }`}
                                         >
                                             📁 Upload File
@@ -342,8 +342,8 @@ export function LoginPage() {
                                             type="button"
                                             onClick={() => setUploadMode('url')}
                                             className={`flex-1 px-4 py-2 rounded-lg text-sm font-medium transition ${uploadMode === 'url'
-                                                ? 'bg-gradient-to-r from-[#00ADB5] to-[#cfd8df] text-[#1f2a33] shadow-lg'
-                                                : 'text-[#1f2a33]/70 hover:text-[#1f2a33]'
+                                                ? 'bg-gradient-to-r from-[#19A7CE] to-[#F6F1F1] text-[#000000] shadow-lg'
+                                                : 'text-[#000000]/70 hover:text-[#000000]'
                                                 }`}
                                         >
                                             🔗 Single URL
@@ -352,8 +352,8 @@ export function LoginPage() {
                                             type="button"
                                             onClick={() => setUploadMode('bulk')}
                                             className={`flex-1 px-4 py-2 rounded-lg text-sm font-medium transition ${uploadMode === 'bulk'
-                                                ? 'bg-gradient-to-r from-[#00ADB5] to-[#cfd8df] text-[#1f2a33] shadow-lg'
-                                                : 'text-[#1f2a33]/70 hover:text-[#1f2a33]'
+                                                ? 'bg-gradient-to-r from-[#19A7CE] to-[#F6F1F1] text-[#000000] shadow-lg'
+                                                : 'text-[#000000]/70 hover:text-[#000000]'
                                                 }`}
                                         >
                                             📦 Bulk Import
@@ -361,22 +361,22 @@ export function LoginPage() {
                                     </div>
 
                                     <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-                                        <label className="space-y-2 text-sm font-medium text-[#1f2a33]/80">
+                                        <label className="space-y-2 text-sm font-medium text-[#000000]/80">
                                             <span>Photo title</span>
                                             <input
                                                 type="text"
                                                 value={newTitle}
                                                 onChange={(event) => setNewTitle(event.target.value)}
                                                 placeholder="Sunset session"
-                                                className="w-full rounded-xl border border-black/10 bg-white px-4 py-3 text-[#1f2a33] outline-none transition focus:border-[#00ADB5] focus:ring-2 focus:ring-[#00ADB5]/30"
+                                                className="w-full rounded-xl border border-black/10 bg-white px-4 py-3 text-[#000000] outline-none transition focus:border-[#19A7CE] focus:ring-2 focus:ring-[#19A7CE]/30"
                                             />
                                         </label>
-                                        <label className="space-y-2 text-sm font-medium text-[#1f2a33]/80">
+                                        <label className="space-y-2 text-sm font-medium text-[#000000]/80">
                                             <span>Category</span>
                                             <select
                                                 value={newCategory}
                                                 onChange={(e) => setNewCategory(e.target.value)}
-                                                className="w-full rounded-xl border border-black/10 bg-white px-4 py-3 text-[#1f2a33] outline-none transition focus:border-[#00ADB5] focus:ring-2 focus:ring-[#00ADB5]/30 appearance-none"
+                                                className="w-full rounded-xl border border-black/10 bg-white px-4 py-3 text-[#000000] outline-none transition focus:border-[#19A7CE] focus:ring-2 focus:ring-[#19A7CE]/30 appearance-none"
                                             >
                                                 <option value="people">People</option>
                                                 <option value="landscape">Landscape</option>
@@ -384,36 +384,36 @@ export function LoginPage() {
                                                 <option value="pets">Pets</option>
                                             </select>
                                         </label>
-                                        <label className="space-y-2 text-sm font-medium text-[#1f2a33]/80 md:col-span-2">
+                                        <label className="space-y-2 text-sm font-medium text-[#000000]/80 md:col-span-2">
                                             <span>Description</span>
                                             <input
                                                 type="text"
                                                 value={newDescription}
                                                 onChange={(event) => setNewDescription(event.target.value)}
                                                 placeholder="Where and how it was captured"
-                                                className="w-full rounded-xl border border-black/10 bg-white px-4 py-3 text-[#1f2a33] outline-none transition focus:border-[#00ADB5] focus:ring-2 focus:ring-[#00ADB5]/30"
+                                                className="w-full rounded-xl border border-black/10 bg-white px-4 py-3 text-[#000000] outline-none transition focus:border-[#19A7CE] focus:ring-2 focus:ring-[#19A7CE]/30"
                                             />
                                         </label>
                                     </div>
 
                                     {uploadMode === 'url' ? (
                                         <div className="space-y-4">
-                                            <div className="rounded-xl border border-[#00ADB5]/30 bg-[#00ADB5]/10 px-4 py-3 text-sm text-[#1f2a33]/80">
-                                                <strong>Recommended:</strong> Upload images to <a href="https://imagekit.io/dashboard/media-library" target="_blank" rel="noopener noreferrer" className="underline hover:text-[#1f2a33]">ImageKit Media Library</a>, then paste the URL below.
+                                            <div className="rounded-xl border border-[#19A7CE]/30 bg-[#19A7CE]/10 px-4 py-3 text-sm text-[#000000]/80">
+                                                <strong>Recommended:</strong> Upload images to <a href="https://imagekit.io/dashboard/media-library" target="_blank" rel="noopener noreferrer" className="underline hover:text-[#000000]">ImageKit Media Library</a>, then paste the URL below.
                                             </div>
-                                            <label className="space-y-2 text-sm font-medium text-[#1f2a33]/80">
+                                            <label className="space-y-2 text-sm font-medium text-[#000000]/80">
                                                 <span>Image URL</span>
                                                 <input
                                                     type="url"
                                                     value={imageUrl}
                                                     onChange={(event) => setImageUrl(event.target.value)}
                                                     placeholder={`${imagekitConfig.urlEndpoint}/Photography-Portfolio/your-image.jpg`}
-                                                    className="w-full rounded-xl border border-black/10 bg-white px-4 py-3 text-[#1f2a33] outline-none transition focus:border-[#00ADB5] focus:ring-2 focus:ring-[#00ADB5]/30"
+                                                    className="w-full rounded-xl border border-black/10 bg-white px-4 py-3 text-[#000000] outline-none transition focus:border-[#19A7CE] focus:ring-2 focus:ring-[#19A7CE]/30"
                                                 />
                                             </label>
                                             {imageUrl && (
                                                 <div className="rounded-xl border border-black/10 bg-white p-4">
-                                                    <p className="text-sm text-[#1f2a33]/80 mb-2">Preview</p>
+                                                    <p className="text-sm text-[#000000]/80 mb-2">Preview</p>
                                                     <img
                                                         src={imageUrl}
                                                         alt="Preview"
@@ -427,55 +427,55 @@ export function LoginPage() {
                                         </div>
                                     ) : uploadMode === 'bulk' ? (
                                         <div className="space-y-4">
-                                            <div className="rounded-xl border border-[#00ADB5]/30 bg-[#00ADB5]/10 px-4 py-3 text-sm text-[#1f2a33]/80">
+                                            <div className="rounded-xl border border-[#19A7CE]/30 bg-[#19A7CE]/10 px-4 py-3 text-sm text-[#000000]/80">
                                                 <strong>Bulk Import:</strong> Paste multiple ImageKit URLs below (one per line). Titles will be auto-generated from filenames.
                                             </div>
-                                            <label className="space-y-2 text-sm font-medium text-[#1f2a33]/80">
+                                            <label className="space-y-2 text-sm font-medium text-[#000000]/80">
                                                 <span>Image URLs (one per line)</span>
                                                 <textarea
                                                     value={bulkUrls}
                                                     onChange={(e) => setBulkUrls(e.target.value)}
                                                     placeholder="https://ik.imagekit.io/dmsully/photo1.jpg"
                                                     rows={8}
-                                                    className="w-full rounded-xl border border-black/10 bg-white px-4 py-3 text-[#1f2a33] outline-none transition focus:border-[#00ADB5] focus:ring-2 focus:ring-[#00ADB5]/30 font-mono text-sm"
+                                                    className="w-full rounded-xl border border-black/10 bg-white px-4 py-3 text-[#000000] outline-none transition focus:border-[#19A7CE] focus:ring-2 focus:ring-[#19A7CE]/30 font-mono text-sm"
                                                 />
                                             </label>
                                             {bulkUrls && (
-                                                <p className="text-xs text-[#1f2a33]/70">
+                                                <p className="text-xs text-[#000000]/70">
                                                     {bulkUrls.split('\n').filter(l => l.trim()).length} URLs detected
                                                 </p>
                                             )}
                                         </div>
                                     ) : (
                                         <div className="space-y-4">
-                                            <div className="space-y-2 text-sm font-medium text-[#1f2a33]/80">
+                                            <div className="space-y-2 text-sm font-medium text-[#000000]/80">
                                                 <span>Upload image</span>
                                                 <label className="flex flex-col items-center justify-center gap-3 rounded-xl border border-dashed border-black/20 bg-black/5 px-6 py-8 text-center transition hover:border-black/40 cursor-pointer">
                                                     <input type="file" accept="image/*" className="hidden" onChange={handleFileChange} />
-                                                    <div className="flex flex-col items-center gap-2 text-[#1f2a33]/80">
+                                                    <div className="flex flex-col items-center gap-2 text-[#000000]/80">
                                                         <span className="text-lg font-semibold">Drop an image or click to browse</span>
-                                                        <span className="text-xs text-[#1f2a33]/70">High-resolution JPG or PNG recommended</span>
+                                                        <span className="text-xs text-[#000000]/70">High-resolution JPG or PNG recommended</span>
                                                     </div>
-                                                    {selectedFile && <p className="text-xs text-[#1f2a33]/80">{selectedFile.name}</p>}
+                                                    {selectedFile && <p className="text-xs text-[#000000]/80">{selectedFile.name}</p>}
                                                 </label>
                                             </div>
 
                                             {previewUrl && (
                                                 <div className="rounded-xl border border-black/10 bg-white p-4">
-                                                    <p className="text-sm text-[#1f2a33]/80">Preview</p>
+                                                    <p className="text-sm text-[#000000]/80">Preview</p>
                                                     <img src={previewUrl} alt="Selected preview" className="mt-3 h-48 w-full rounded-lg object-cover" />
                                                 </div>
                                             )}
                                         </div>
                                     )}
 
-                                    {uploadStatus && <p className="text-sm text-[#1f2a33]/80">{uploadStatus}</p>}
+                                    {uploadStatus && <p className="text-sm text-[#000000]/80">{uploadStatus}</p>}
 
                                     <button
                                         type="button"
                                         onClick={uploadMode === 'bulk' ? handleBulkImport : uploadMode === 'url' ? handleAddFromUrl : handleUpload}
                                         disabled={isUploading}
-                                        className="w-full rounded-xl bg-gradient-to-r from-[#00ADB5] to-[#cfd8df] px-6 py-3 text-sm font-semibold uppercase tracking-wide text-[#1f2a33] shadow-lg shadow-[#00ADB5]/25 transition hover:from-[#00ADB5]/90 hover:to-[#cfd8df]/90 focus:outline-none focus:ring-2 focus:ring-[#00ADB5]/50 disabled:opacity-50 disabled:cursor-not-allowed"
+                                        className="w-full rounded-xl bg-gradient-to-r from-[#19A7CE] to-[#F6F1F1] px-6 py-3 text-sm font-semibold uppercase tracking-wide text-[#000000] shadow-lg shadow-[#19A7CE]/25 transition hover:from-[#19A7CE]/90 hover:to-[#F6F1F1]/90 focus:outline-none focus:ring-2 focus:ring-[#19A7CE]/50 disabled:opacity-50 disabled:cursor-not-allowed"
                                     >
                                         {isUploading ? 'Uploading...' : 'Add to gallery'}
                                     </button>
@@ -483,7 +483,7 @@ export function LoginPage() {
 
                                 <div className="space-y-3 rounded-2xl border border-black/10 bg-white p-6 shadow-lg shadow-black/5">
                                     <h3 className="text-lg font-semibold">Manage existing photos</h3>
-                                    <p className="text-sm text-[#1f2a33]/80">Update descriptions or rename titles to keep the gallery current.</p>
+                                    <p className="text-sm text-[#000000]/80">Update descriptions or rename titles to keep the gallery current.</p>
                                     <div className="space-y-4 max-h-[520px] overflow-y-auto pr-2">
                                         {photos.map((photo) => (
                                             <div key={photo.id} className="rounded-xl border border-black/5 bg-black/5 p-4 space-y-3">
@@ -495,12 +495,12 @@ export function LoginPage() {
                                                                 type="text"
                                                                 value={drafts[photo.id]?.title ?? photo.title}
                                                                 onChange={(event) => handleDraftChange(photo.id, 'title', event.target.value)}
-                                                                className="flex-1 rounded-lg border border-black/10 bg-white px-3 py-2 text-sm text-[#1f2a33] outline-none transition focus:border-[#00ADB5] focus:ring-2 focus:ring-[#00ADB5]/30 w-full"
+                                                                className="flex-1 rounded-lg border border-black/10 bg-white px-3 py-2 text-sm text-[#000000] outline-none transition focus:border-[#19A7CE] focus:ring-2 focus:ring-[#19A7CE]/30 w-full"
                                                             />
                                                             <select
                                                                 value={drafts[photo.id]?.category ?? photo.category}
                                                                 onChange={(event) => handleDraftChange(photo.id, 'category', event.target.value)}
-                                                                className="w-full sm:w-32 rounded-lg border border-black/10 bg-white px-2 py-2 text-sm text-[#1f2a33] outline-none transition focus:border-[#00ADB5] focus:ring-2 focus:ring-[#00ADB5]/30 appearance-none"
+                                                                className="w-full sm:w-32 rounded-lg border border-black/10 bg-white px-2 py-2 text-sm text-[#000000] outline-none transition focus:border-[#19A7CE] focus:ring-2 focus:ring-[#19A7CE]/30 appearance-none"
                                                             >
                                                                 <option value="people">People</option>
                                                                 <option value="landscape">Landscape</option>
@@ -512,7 +512,7 @@ export function LoginPage() {
                                                             type="text"
                                                             value={drafts[photo.id]?.description ?? photo.description}
                                                             onChange={(event) => handleDraftChange(photo.id, 'description', event.target.value)}
-                                                            className="rounded-lg border border-black/10 bg-white px-3 py-2 text-sm text-[#1f2a33] outline-none transition focus:border-[#00ADB5] focus:ring-2 focus:ring-[#00ADB5]/30 w-full"
+                                                            className="rounded-lg border border-black/10 bg-white px-3 py-2 text-sm text-[#000000] outline-none transition focus:border-[#19A7CE] focus:ring-2 focus:ring-[#19A7CE]/30 w-full"
                                                         />
                                                     </div>
                                                 </div>
@@ -521,8 +521,8 @@ export function LoginPage() {
                                                         type="button"
                                                         onClick={() => updatePhoto(photo.id, { is_featured: !photo.is_featured })}
                                                         className={`flex-1 rounded-lg border px-3 py-2 text-xs font-semibold uppercase tracking-wide transition ${photo.is_featured
-                                                            ? 'bg-[#00ADB5]/10 border-[#00ADB5]/40 text-[#00ADB5] hover:bg-[#00ADB5]/20'
-                                                            : 'border-black/20 text-[#1f2a33]/70 hover:border-[#00ADB5]/40 hover:text-[#00ADB5]'
+                                                            ? 'bg-[#19A7CE]/10 border-[#19A7CE]/40 text-[#19A7CE] hover:bg-[#19A7CE]/20'
+                                                            : 'border-black/20 text-[#000000]/70 hover:border-[#19A7CE]/40 hover:text-[#19A7CE]'
                                                             }`}
                                                     >
                                                         {photo.is_featured ? '★ Featured' : '☆ Feature'}
@@ -530,7 +530,7 @@ export function LoginPage() {
                                                     <button
                                                         type="button"
                                                         onClick={() => handleSaveDraft(photo.id)}
-                                                        className="flex-[2] rounded-lg border border-[#00ADB5]/40 px-3 py-2 text-xs font-semibold uppercase tracking-wide text-[#1f2a33]/80 transition hover:border-[#00ADB5] hover:text-[#1f2a33]"
+                                                        className="flex-[2] rounded-lg border border-[#19A7CE]/40 px-3 py-2 text-xs font-semibold uppercase tracking-wide text-[#000000]/80 transition hover:border-[#19A7CE] hover:text-[#000000]"
                                                     >
                                                         Save updates
                                                     </button>
