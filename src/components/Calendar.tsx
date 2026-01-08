@@ -49,12 +49,12 @@ export function Calendar({ onDateSelect, selectedDate, blockedDates = [] }: Cale
     return (
         <div className="w-full max-w-4xl mx-auto bg-white/80 backdrop-blur-md rounded-2xl border border-black/10 p-6 shadow-lg shadow-black/5">
             <div className="flex justify-between items-center mb-6">
-                <h2 className="text-2xl font-bold tracking-tight text-[#1f2a33]">Select a Date</h2>
+                <h2 className="text-2xl font-bold tracking-tight text-[#000000]">Select a Date</h2>
                 <div className="flex gap-2">
-                    <button onClick={prevMonth} className="p-2 hover:bg-black/5 rounded-full transition-colors text-[#1f2a33]">
+                    <button onClick={prevMonth} className="p-2 hover:bg-black/5 rounded-full transition-colors text-[#000000]">
                         <FiChevronLeft className="w-5 h-5" />
                     </button>
-                    <button onClick={nextMonth} className="p-2 hover:bg-black/5 rounded-full transition-colors text-[#1f2a33]">
+                    <button onClick={nextMonth} className="p-2 hover:bg-black/5 rounded-full transition-colors text-[#000000]">
                         <FiChevronRight className="w-5 h-5" />
                     </button>
                 </div>
@@ -67,8 +67,8 @@ export function Calendar({ onDateSelect, selectedDate, blockedDates = [] }: Cale
 
                     return (
                         <div key={index} className="flex flex-col">
-                            <h3 className="text-lg font-medium text-[#1f2a33]/80 mb-4 text-center">{monthName}</h3>
-                            <div className="grid grid-cols-7 gap-1 text-center text-sm mb-2 text-[#1f2a33]/60">
+                            <h3 className="text-lg font-medium text-[#000000]/80 mb-4 text-center">{monthName}</h3>
+                            <div className="grid grid-cols-7 gap-1 text-center text-sm mb-2 text-[#000000]/60">
                                 {['S', 'M', 'T', 'W', 'T', 'F', 'S'].map((d, i) => <span key={i}>{d}</span>)}
                             </div>
                             <div className="grid grid-cols-7 gap-1">
@@ -89,8 +89,8 @@ export function Calendar({ onDateSelect, selectedDate, blockedDates = [] }: Cale
                                             onClick={() => onDateSelect(date)}
                                             className={`
                         aspect-square rounded-full flex items-center justify-center text-sm transition-all
-                        ${isDisabled ? 'text-[#9aa6af] cursor-not-allowed decoration-slice line-through opacity-50' : 'hover:bg-black/5 text-[#1f2a33]'}
-                        ${isSelected ? 'bg-gradient-to-r from-[#00ADB5]/80 to-[#cfd8df] text-[#1f2a33] font-bold shadow-lg scale-110' : ''}
+                        ${isDisabled ? 'text-[#146C94]/40 cursor-not-allowed decoration-slice line-through opacity-50' : 'hover:bg-black/5 text-[#000000]'}
+                        ${isSelected ? 'bg-gradient-to-r from-[#19A7CE]/80 to-[#F6F1F1] text-[#000000] font-bold shadow-lg scale-110' : ''}
                         ${isBlocked && !isPast ? 'bg-red-900/20 text-red-500/50' : ''} 
                       `}
                                         >

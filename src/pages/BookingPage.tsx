@@ -93,7 +93,7 @@ export function BookingPage() {
                     <h1 className="text-4xl md:text-6xl font-bold tracking-tighter mb-4">
                         BOOK A <span className="text-gradient">SESSION</span>
                     </h1>
-                    <p className="text-[#1f2a33]/70 text-lg max-w-2xl mx-auto">
+                    <p className="text-[#000000]/70 text-lg max-w-2xl mx-auto">
                         Select a date below to get started. We'll confirm your appointment via email.
                     </p>
                 </div>
@@ -116,7 +116,7 @@ export function BookingPage() {
                         >
                             {!isSubmitted ? (
                                 <form onSubmit={handleSubmit} className="space-y-6">
-                                    <h3 className="text-xl font-bold text-[#1f2a33] mb-6">
+                                    <h3 className="text-xl font-bold text-[#000000] mb-6">
                                         {selectedDate
                                             ? `Booking for ${selectedDate.toLocaleDateString()}`
                                             : 'Select a date first'
@@ -125,10 +125,10 @@ export function BookingPage() {
 
                                     {/* Service Selection Display */}
                                     <div>
-                                        <label className="block text-sm font-medium text-[#1f2a33]/70 mb-2">Service Type</label>
+                                        <label className="block text-sm font-medium text-[#000000]/70 mb-2">Service Type</label>
                                         <input
                                             type="text"
-                                            className="w-full bg-white border border-black/10 rounded-lg px-4 py-3 text-[#1f2a33] font-semibold focus:outline-none focus:border-[#00ADB5] transition-colors"
+                                            className="w-full bg-white border border-black/10 rounded-lg px-4 py-3 text-[#000000] font-semibold focus:outline-none focus:border-[#19A7CE] transition-colors"
                                             value={formState.service}
                                             onChange={e => setFormState({ ...formState, service: e.target.value })}
                                             placeholder="General Inquiry (or select from Services page)"
@@ -136,32 +136,32 @@ export function BookingPage() {
                                     </div>
 
                                     <div>
-                                        <label className="block text-sm font-medium text-[#1f2a33]/70 mb-2">Name</label>
+                                        <label className="block text-sm font-medium text-[#000000]/70 mb-2">Name</label>
                                         <input
                                             type="text"
                                             required
-                                            className="w-full bg-white border border-black/10 rounded-lg px-4 py-3 text-[#1f2a33] focus:outline-none focus:border-[#00ADB5] transition-colors"
+                                            className="w-full bg-white border border-black/10 rounded-lg px-4 py-3 text-[#000000] focus:outline-none focus:border-[#19A7CE] transition-colors"
                                             value={formState.name}
                                             onChange={e => setFormState({ ...formState, name: e.target.value })}
                                         />
                                     </div>
 
                                     <div>
-                                        <label className="block text-sm font-medium text-[#1f2a33]/70 mb-2">Email</label>
+                                        <label className="block text-sm font-medium text-[#000000]/70 mb-2">Email</label>
                                         <input
                                             type="email"
                                             required
-                                            className="w-full bg-white border border-black/10 rounded-lg px-4 py-3 text-[#1f2a33] focus:outline-none focus:border-[#00ADB5] transition-colors"
+                                            className="w-full bg-white border border-black/10 rounded-lg px-4 py-3 text-[#000000] focus:outline-none focus:border-[#19A7CE] transition-colors"
                                             value={formState.email}
                                             onChange={e => setFormState({ ...formState, email: e.target.value })}
                                         />
                                     </div>
 
                                     <div>
-                                        <label className="block text-sm font-medium text-[#1f2a33]/70 mb-2">Message (Optional)</label>
+                                        <label className="block text-sm font-medium text-[#000000]/70 mb-2">Message (Optional)</label>
                                         <textarea
                                             rows={4}
-                                            className="w-full bg-white border border-black/10 rounded-lg px-4 py-3 text-[#1f2a33] focus:outline-none focus:border-[#00ADB5] transition-colors"
+                                            className="w-full bg-white border border-black/10 rounded-lg px-4 py-3 text-[#000000] focus:outline-none focus:border-[#19A7CE] transition-colors"
                                             value={formState.message}
                                             onChange={e => setFormState({ ...formState, message: e.target.value })}
                                         />
@@ -170,18 +170,18 @@ export function BookingPage() {
                                     <button
                                         type="submit"
                                         disabled={isSubmitting}
-                                        className="w-full py-4 rounded-lg bg-gradient-to-r from-[#00ADB5] to-[#cfd8df] text-[#1f2a33] font-bold tracking-wide hover:opacity-90 transition-opacity disabled:opacity-50 disabled:cursor-not-allowed"
+                                        className="w-full py-4 rounded-lg bg-gradient-to-r from-[#19A7CE] to-[#F6F1F1] text-[#000000] font-bold tracking-wide hover:opacity-90 transition-opacity disabled:opacity-50 disabled:cursor-not-allowed"
                                     >
                                         {isSubmitting ? 'BOOKING...' : 'CONFIRM BOOKING'}
                                     </button>
                                 </form>
                             ) : (
                                 <div className="h-full flex flex-col items-center justify-center text-center py-12">
-                                    <div className="w-16 h-16 bg-[#00ADB5]/20 rounded-full flex items-center justify-center mb-6">
-                                        <FiCheck className="w-8 h-8 text-[#00ADB5]" />
+                                    <div className="w-16 h-16 bg-[#19A7CE]/20 rounded-full flex items-center justify-center mb-6">
+                                        <FiCheck className="w-8 h-8 text-[#19A7CE]" />
                                     </div>
-                                    <h3 className="text-2xl font-bold text-[#1f2a33] mb-2">Request Sent!</h3>
-                                    <p className="text-[#1f2a33]/70">
+                                    <h3 className="text-2xl font-bold text-[#000000] mb-2">Request Sent!</h3>
+                                    <p className="text-[#000000]/70">
                                         We'll be in touch shortly to confirm your session on {selectedDate?.toLocaleDateString()}.
                                     </p>
                                 </div>

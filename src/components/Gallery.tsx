@@ -82,7 +82,7 @@ export const Gallery = ({ featuredOnly = false, category = 'all' }: { featuredOn
                                             </button>
                                             <button
                                                 onClick={handleCancelDelete}
-                                                className="px-3 py-1.5 bg-[#3A4750] hover:bg-[#00ADB5] text-[#EEEEEE] text-xs font-semibold rounded-md transition"
+                                                className="px-3 py-1.5 bg-[#146C94] hover:bg-[#19A7CE] text-[#F6F1F1] text-xs font-semibold rounded-md transition"
                                             >
                                                 Cancel
                                             </button>
