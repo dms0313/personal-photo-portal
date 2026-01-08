@@ -47,6 +47,7 @@ const SLIDES = [
 
 function CarouselSlide({ slide }: { slide: typeof SLIDES[0] }) {
     const [currentImageIndex, setCurrentImageIndex] = useState(0)
+    const [isTextHovered, setIsTextHovered] = useState(false)
 
     const nextImage = useCallback(() => {
         setCurrentImageIndex((prev) => (prev + 1) % slide.images.length)
@@ -70,34 +71,38 @@ function CarouselSlide({ slide }: { slide: typeof SLIDES[0] }) {
 
         const timer = setInterval(() => {
             nextImage()
-        }, 7000) // Change image every 7 seconds (slower)
+        }, 12000) // Change image every 12 seconds (slower)
 
         return () => clearInterval(timer)
     }, [slide.images.length, nextImage])
 
     return (
-        <section className="relative h-screen w-full snap-start flex flex-col items-center justify-center overflow-hidden bg-white">
+        <section className="relative h-screen w-full snap-start flex flex-col items-center justify-center overflow-hidden bg-white group/section">
 
             {/* Image Container with Padding - creates the white border effect */}
             <div className="absolute inset-0 w-full h-full p-4 md:p-12 flex items-center justify-center">
                 <div className="relative w-full h-full overflow-hidden shadow-sm">
                     {/* Background Overlay for Depth/Vignette if needed - removed for cleaner look, or kept minimal */}
 
-                    <AnimatePresence mode="wait">
+                    {/* Seamless Crossfade: Removing mode="wait" so images overlap */}
+                    <AnimatePresence>
                         <motion.img
                             key={currentImageIndex}
                             // Initial state: Start scale 1.1 (zoomed in slightly) or 1.0
                             // User wants "page to begin with all white screen, the first photo fades in gently"
-                            initial={{ opacity: 0, scale: 1.0 }}
-                            animate={{ opacity: 1, scale: 1.1 }}
+                            initial={{ opacity: 0, scale: 1.1 }}
+                            animate={{ opacity: 1, scale: 1.0 }}
                             exit={{ opacity: 0 }}
                             transition={{
-                                opacity: { duration: 1.5, ease: "easeInOut" },
-                                scale: { duration: 15, ease: "linear" } // Slow continuous zoom
+                                opacity: { duration: 2.0, ease: "easeInOut" },
+                                scale: { duration: 12, ease: "linear" } // Slow continuous zoom
                             }}
                             src={slide.images[currentImageIndex]}
                             alt={slide.title}
-                            className="absolute inset-0 w-full h-full object-cover group-hover:grayscale-0 grayscale transition-all duration-700"
+                            // Logic: Grayscale by default. Remove grayscale ONLY if hovering section AND NOT hovering text.
+                            // If isTextHovered is true, we want grayscale.
+                            // If NOT isTextHovered, we allow group-hover/section to remove grayscale.
+                            className={`absolute inset-0 w-full h-full object-cover transition-all duration-700 ${isTextHovered ? 'grayscale' : 'grayscale group-hover/section:grayscale-0'}`}
                         />
                     </AnimatePresence>
 
@@ -106,13 +111,13 @@ function CarouselSlide({ slide }: { slide: typeof SLIDES[0] }) {
                         <>
                             <button
                                 onClick={(e) => { e.stopPropagation(); prevImage(); }}
-                                className="absolute left-6 top-1/2 -translate-y-1/2 z-30 p-3 rounded-full bg-black/20 hover:bg-black/40 backdrop-blur-md text-white/70 hover:text-white opacity-0 group-hover:opacity-100 transition-all duration-300"
+                                className="absolute left-6 top-1/2 -translate-y-1/2 z-30 p-3 rounded-full bg-black/20 hover:bg-black/40 backdrop-blur-md text-white/70 hover:text-white opacity-0 group-hover/section:opacity-100 transition-all duration-300"
                             >
                                 <FiChevronLeft size={32} />
                             </button>
                             <button
                                 onClick={(e) => { e.stopPropagation(); nextImage(); }}
-                                className="absolute right-6 top-1/2 -translate-y-1/2 z-30 p-3 rounded-full bg-black/20 hover:bg-black/40 backdrop-blur-md text-white/70 hover:text-white opacity-0 group-hover:opacity-100 transition-all duration-300"
+                                className="absolute right-6 top-1/2 -translate-y-1/2 z-30 p-3 rounded-full bg-black/20 hover:bg-black/40 backdrop-blur-md text-white/70 hover:text-white opacity-0 group-hover/section:opacity-100 transition-all duration-300"
                             >
                                 <FiChevronRight size={32} />
                             </button>
@@ -132,7 +137,11 @@ function CarouselSlide({ slide }: { slide: typeof SLIDES[0] }) {
             </div>
 
             {/* Text Overlay - Centered - NO Mix Blend Mode */}
-            <div className="absolute inset-0 z-20 flex flex-col items-center justify-center pointer-events-none">
+            <div
+                className="absolute inset-0 z-20 flex flex-col items-center justify-center pointer-events-auto"
+                onMouseEnter={() => setIsTextHovered(true)}
+                onMouseLeave={() => setIsTextHovered(false)}
+            >
                 {slide.isMain ? (
                     // Main Intro Styling
                     <motion.div
@@ -152,11 +161,11 @@ function CarouselSlide({ slide }: { slide: typeof SLIDES[0] }) {
                     // Category Header Styling
                     <div className="flex flex-col items-center overflow-hidden">
                         {/* Animate IN from Side (Left) */}
-                        <h2 className="text-6xl md:text-8xl font-bold tracking-tighter uppercase text-center opacity-0 group-hover:opacity-100 transform -translate-x-full group-hover:translate-x-0 transition-all duration-700 ease-out text-transparent bg-clip-text bg-gradient-to-r from-[#00ADB5] to-black">
+                        <h2 className="text-7xl md:text-9xl font-bold tracking-tighter uppercase text-center opacity-0 group-hover/section:opacity-100 transform -translate-x-full group-hover/section:translate-x-0 transition-all duration-700 ease-out text-transparent bg-clip-text bg-gradient-to-r from-[#00ADB5] to-black">
                             {slide.title}
                         </h2>
                         {/* Animate IN from Side (Right) */}
-                        <p className="text-xl md:text-3xl font-light tracking-[0.1em] uppercase mt-4 opacity-0 group-hover:opacity-100 transform translate-x-full group-hover:translate-x-0 transition-all duration-700 delay-100 ease-out text-black">
+                        <p className="text-xl md:text-3xl font-light tracking-[0.1em] uppercase mt-4 opacity-0 group-hover/section:opacity-100 transform translate-x-full group-hover/section:translate-x-0 transition-all duration-700 delay-100 ease-out text-black">
                             {slide.subtitle}
                         </p>
                     </div>
@@ -165,7 +174,11 @@ function CarouselSlide({ slide }: { slide: typeof SLIDES[0] }) {
 
             {/* CTA separate from mix-blend to keep its own colors */}
             {slide.showCta && (
-                <div className="absolute bottom-24 z-30 pointer-events-auto opacity-0 group-hover:opacity-100 transition-all duration-700 delay-200">
+                <div
+                    className="absolute bottom-24 z-30 pointer-events-auto opacity-0 group-hover/section:opacity-100 transition-all duration-700 delay-200"
+                    onMouseEnter={() => setIsTextHovered(true)}
+                    onMouseLeave={() => setIsTextHovered(false)}
+                >
                     <Link to="/booking">
                         <button className="px-10 py-4 border-2 border-[#00ADB5] bg-[#00ADB5] text-[#1f2a33] text-xl tracking-widest uppercase hover:bg-black hover:border-black hover:text-white transition-all duration-300 shadow-[0_0_30px_rgba(0,173,181,0.4)] hover:shadow-[0_0_40px_rgba(0,0,0,0.5)]">
                             Book Now
