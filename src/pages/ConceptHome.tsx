@@ -127,12 +127,13 @@ function CarouselSlide({ slide }: { slide: typeof SLIDES[0] }) {
                     <AnimatePresence>
                         <motion.img
                             key={currentImageIndex}
-                            initial={{ opacity: 0, scale: 1.1 }}
-                            animate={{ opacity: 1, scale: 1.0 }}
+                            initial={{ opacity: 0, scale: 1.1, x: 50 }}
+                            animate={{ opacity: 1, scale: 1.0, x: 0 }}
                             exit={{ opacity: 0 }}
                             transition={{
                                 opacity: { duration: 2.0, ease: "easeInOut" },
-                                scale: { duration: 12, ease: "linear" }
+                                scale: { duration: 12, ease: "linear" },
+                                x: { duration: 2.0, ease: "easeOut" }
                             }}
                             src={slide.images[currentImageIndex]}
                             alt={slide.title}
@@ -222,7 +223,7 @@ function CarouselSlide({ slide }: { slide: typeof SLIDES[0] }) {
 
 export function ConceptHome() {
     return (
-        <div className="h-[100dvh] w-full flex md:flex-col overflow-x-scroll md:overflow-x-hidden overflow-y-hidden md:overflow-y-scroll snap-x md:snap-y snap-mandatory bg-white text-[#1f2a33]">
+        <div className="h-[100dvh] w-full flex flex-col overflow-hidden overflow-y-scroll snap-y snap-mandatory bg-white text-[#1f2a33]">
             {SLIDES.map((slide) => (
                 <CarouselSlide key={slide.id} slide={slide} />
             ))}
