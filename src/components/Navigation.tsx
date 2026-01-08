@@ -32,21 +32,23 @@ export function Navigation() {
             </Link>
 
             {/* Desktop Menu */}
-            <ul className="hidden md:flex gap-8 text-sm font-medium tracking-wide text-[#1f2a33]">
-                {links.map((link) => (
-                    <li key={link.name}>
-                        <Link to={link.path} className="hover:text-black transition-colors relative group">
-                            {link.name}
-                            {location.pathname === link.path && (
-                                <motion.div
-                                    layoutId="underline"
-                                    className="absolute left-0 right-0 -bottom-1 h-0.5 bg-gradient-to-r from-[#00ADB5] to-black"
-                                />
-                            )}
-                        </Link>
-                    </li>
-                ))}
-            </ul>
+            <div className="hidden md:flex flex-1 justify-end">
+                <ul className="flex gap-8 text-sm font-medium tracking-wide text-[#1f2a33]">
+                    {links.map((link) => (
+                        <li key={link.name}>
+                            <Link to={link.path} className="hover:text-black transition-colors relative group">
+                                {link.name}
+                                {location.pathname === link.path && (
+                                    <motion.div
+                                        layoutId="underline"
+                                        className="absolute left-0 right-0 -bottom-1 h-0.5 bg-gradient-to-r from-[#00ADB5] to-black"
+                                    />
+                                )}
+                            </Link>
+                        </li>
+                    ))}
+                </ul>
+            </div>
 
             {/* Mobile Menu Toggle */}
             <button

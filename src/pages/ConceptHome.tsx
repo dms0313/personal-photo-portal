@@ -82,27 +82,21 @@ function CarouselSlide({ slide }: { slide: typeof SLIDES[0] }) {
             {/* Image Container with Padding - creates the white border effect */}
             <div className="absolute inset-0 w-full h-full p-4 md:p-12 flex items-center justify-center">
                 <div className="relative w-full h-full overflow-hidden shadow-sm">
-                    {/* Background Overlay for Depth/Vignette if needed - removed for cleaner look, or kept minimal */}
-
                     {/* Seamless Crossfade: Removing mode="wait" so images overlap */}
                     <AnimatePresence>
                         <motion.img
                             key={currentImageIndex}
-                            // Initial state: Start scale 1.1 (zoomed in slightly) or 1.0
-                            // User wants "page to begin with all white screen, the first photo fades in gently"
                             initial={{ opacity: 0, scale: 1.1 }}
                             animate={{ opacity: 1, scale: 1.0 }}
                             exit={{ opacity: 0 }}
                             transition={{
                                 opacity: { duration: 2.0, ease: "easeInOut" },
-                                scale: { duration: 12, ease: "linear" } // Slow continuous zoom
+                                scale: { duration: 12, ease: "linear" }
                             }}
                             src={slide.images[currentImageIndex]}
                             alt={slide.title}
-                            // Logic: Grayscale by default. Remove grayscale ONLY if hovering section AND NOT hovering text.
-                            // If isTextHovered is true, we want grayscale.
-                            // If NOT isTextHovered, we allow group-hover/section to remove grayscale.
-                            className={`absolute inset-0 w-full h-full object-cover transition-all duration-700 ${isTextHovered ? 'grayscale' : 'grayscale group-hover/section:grayscale-0'}`}
+                            // NEW HOVER LOGIC: Black and white by default, color only on text hover
+                            className={`absolute inset-0 w-full h-full object-cover transition-all duration-1000 ${isTextHovered ? 'grayscale-0' : 'grayscale'}`}
                         />
                     </AnimatePresence>
 
@@ -136,7 +130,7 @@ function CarouselSlide({ slide }: { slide: typeof SLIDES[0] }) {
                 </div>
             </div>
 
-            {/* Text Overlay - Centered - NO Mix Blend Mode */}
+            {/* Text Overlay - Centered - Added drop-shadow for improved visibility */}
             <div
                 className="absolute inset-0 z-20 flex flex-col items-center justify-center pointer-events-auto"
                 onMouseEnter={() => setIsTextHovered(true)}
@@ -150,10 +144,10 @@ function CarouselSlide({ slide }: { slide: typeof SLIDES[0] }) {
                         transition={{ delay: 1, duration: 1 }}
                         className="flex flex-col items-center"
                     >
-                        <h1 className="text-[12vw] leading-[0.8] font-bold tracking-tighter text-center uppercase whitespace-nowrap text-transparent bg-clip-text bg-gradient-to-r from-[#00ADB5] to-black">
+                        <h1 className="text-[12vw] leading-[0.8] font-bold tracking-tighter text-center uppercase whitespace-nowrap text-transparent bg-clip-text bg-gradient-to-r from-[#00ADB5] to-black drop-shadow-[0_0_15px_rgba(255,255,255,0.8)]">
                             {slide.title}
                         </h1>
-                        <p className="text-[4vw] font-light tracking-[0.5em] text-center uppercase mt-2 md:mt-6 text-black">
+                        <p className="text-[4vw] font-light tracking-[0.5em] text-center uppercase mt-2 md:mt-6 text-black drop-shadow-[0_0_10px_rgba(255,255,255,0.5)]">
                             {slide.subtitle}
                         </p>
                     </motion.div>
@@ -161,18 +155,18 @@ function CarouselSlide({ slide }: { slide: typeof SLIDES[0] }) {
                     // Category Header Styling
                     <div className="flex flex-col items-center overflow-hidden">
                         {/* Animate IN from Side (Left) */}
-                        <h2 className="text-7xl md:text-9xl font-bold tracking-tighter uppercase text-center opacity-0 group-hover/section:opacity-100 transform -translate-x-full group-hover/section:translate-x-0 transition-all duration-700 ease-out text-transparent bg-clip-text bg-gradient-to-r from-[#00ADB5] to-black">
+                        <h2 className="text-7xl md:text-9xl font-bold tracking-tighter uppercase text-center opacity-0 group-hover/section:opacity-100 transform -translate-x-full group-hover/section:translate-x-0 transition-all duration-700 ease-out text-transparent bg-clip-text bg-gradient-to-r from-[#00ADB5] to-black drop-shadow-[0_0_15px_rgba(255,255,255,0.8)]">
                             {slide.title}
                         </h2>
                         {/* Animate IN from Side (Right) */}
-                        <p className="text-xl md:text-3xl font-light tracking-[0.1em] uppercase mt-4 opacity-0 group-hover/section:opacity-100 transform translate-x-full group-hover/section:translate-x-0 transition-all duration-700 delay-100 ease-out text-black">
+                        <p className="text-xl md:text-3xl font-light tracking-[0.1em] uppercase mt-4 opacity-0 group-hover/section:opacity-100 transform translate-x-full group-hover/section:translate-x-0 transition-all duration-700 delay-100 ease-out text-black drop-shadow-[0_0_10px_rgba(255,255,255,0.5)]">
                             {slide.subtitle}
                         </p>
                     </div>
                 )}
             </div>
 
-            {/* CTA separate from mix-blend to keep its own colors */}
+            {/* CTA */}
             {slide.showCta && (
                 <div
                     className="absolute bottom-24 z-30 pointer-events-auto opacity-0 group-hover/section:opacity-100 transition-all duration-700 delay-200"
