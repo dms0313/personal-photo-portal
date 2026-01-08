@@ -76,82 +76,87 @@ function CarouselSlide({ slide, index }: { slide: typeof SLIDES[0], index: numbe
     }, [slide.images.length, nextImage])
 
     return (
-        <section className="relative h-screen w-full snap-start flex flex-col items-center justify-center overflow-hidden group">
+        <section className="relative h-screen w-full snap-start flex flex-col items-center justify-center overflow-hidden bg-white">
 
-            {/* Full Screen Image Container */}
-            <div className="absolute inset-0 w-full h-full bg-[#f0f4f7] group/carousel">
-                {/* Background Overlay for Depth - slightly reduced opacity for cleaner shots */}
-                <div className="absolute inset-0 bg-black/10 z-10 pointer-events-none transition-opacity duration-500 group-hover:opacity-0" />
+            {/* Image Container with Padding - creates the white border effect */}
+            <div className="absolute inset-0 w-full h-full p-4 md:p-12 flex items-center justify-center">
+                <div className="relative w-full h-full overflow-hidden shadow-sm">
+                    {/* Background Overlay for Depth/Vignette if needed - removed for cleaner look, or kept minimal */}
 
-                <AnimatePresence mode="wait">
-                    <motion.img
-                        key={currentImageIndex}
-                        initial={index === 0 && currentImageIndex === 0 ? { scale: 1.1, opacity: 0 } : { opacity: 0 }}
-                        animate={index === 0 && currentImageIndex === 0 ? { scale: 1, opacity: 1 } : { opacity: 1 }}
-                        exit={{ opacity: 0 }}
-                        transition={{ duration: 1.5, ease: "easeInOut" }} // Smoother transition
-                        src={slide.images[currentImageIndex]}
-                        alt={slide.title}
-                        className="absolute inset-0 w-full h-full object-cover transition-transform duration-[10s] ease-linear group-hover:scale-105 grayscale group-hover:grayscale-0"
-                        style={{ transition: 'transform 10s linear, filter 0.7s ease-in-out' }}
-                    />
-                </AnimatePresence>
+                    <AnimatePresence mode="wait">
+                        <motion.img
+                            key={currentImageIndex}
+                            // Initial state: Start scale 1.1 (zoomed in slightly) or 1.0
+                            // User wants "page to begin with all white screen, the first photo fades in gently"
+                            initial={{ opacity: 0, scale: 1.0 }}
+                            animate={{ opacity: 1, scale: 1.1 }}
+                            exit={{ opacity: 0 }}
+                            transition={{
+                                opacity: { duration: 1.5, ease: "easeInOut" },
+                                scale: { duration: 15, ease: "linear" } // Slow continuous zoom
+                            }}
+                            src={slide.images[currentImageIndex]}
+                            alt={slide.title}
+                            className="absolute inset-0 w-full h-full object-cover group-hover:grayscale-0 grayscale transition-all duration-700"
+                        />
+                    </AnimatePresence>
 
-                {/* Carousel Controls (only if > 1 image) */}
-                {slide.images.length > 1 && (
-                    <>
-                        <button
-                            onClick={(e) => { e.stopPropagation(); prevImage(); }}
-                            className="absolute left-6 top-1/2 -translate-y-1/2 z-30 p-3 rounded-full bg-black/20 hover:bg-black/40 backdrop-blur-md text-white/70 hover:text-white opacity-0 group-hover/carousel:opacity-100 transition-all duration-300 transform -translate-x-4 group-hover/carousel:translate-x-0"
-                        >
-                            <FiChevronLeft size={32} />
-                        </button>
-                        <button
-                            onClick={(e) => { e.stopPropagation(); nextImage(); }}
-                            className="absolute right-6 top-1/2 -translate-y-1/2 z-30 p-3 rounded-full bg-black/20 hover:bg-black/40 backdrop-blur-md text-white/70 hover:text-white opacity-0 group-hover/carousel:opacity-100 transition-all duration-300 transform translate-x-4 group-hover/carousel:translate-x-0"
-                        >
-                            <FiChevronRight size={32} />
-                        </button>
+                    {/* Carousel Controls (only if > 1 image) */}
+                    {slide.images.length > 1 && (
+                        <>
+                            <button
+                                onClick={(e) => { e.stopPropagation(); prevImage(); }}
+                                className="absolute left-6 top-1/2 -translate-y-1/2 z-30 p-3 rounded-full bg-black/20 hover:bg-black/40 backdrop-blur-md text-white/70 hover:text-white opacity-0 group-hover:opacity-100 transition-all duration-300"
+                            >
+                                <FiChevronLeft size={32} />
+                            </button>
+                            <button
+                                onClick={(e) => { e.stopPropagation(); nextImage(); }}
+                                className="absolute right-6 top-1/2 -translate-y-1/2 z-30 p-3 rounded-full bg-black/20 hover:bg-black/40 backdrop-blur-md text-white/70 hover:text-white opacity-0 group-hover:opacity-100 transition-all duration-300"
+                            >
+                                <FiChevronRight size={32} />
+                            </button>
 
-                        {/* Indicators */}
-                        <div className="absolute bottom-6 left-1/2 -translate-x-1/2 z-30 flex gap-3">
-                            {slide.images.map((_, idx) => (
-                                <div
-                                    key={idx}
-                                    className={`h-1 rounded-full transition-all duration-500 box-content border border-black/10 ${idx === currentImageIndex ? 'bg-white w-8 opacity-100' : 'bg-white/40 w-2 hover:w-4 opacity-70'}`}
-                                />
-                            ))}
-                        </div>
-                    </>
-                )}
+                            {/* Indicators */}
+                            <div className="absolute bottom-6 left-1/2 -translate-x-1/2 z-30 flex gap-3">
+                                {slide.images.map((_, idx) => (
+                                    <div
+                                        key={idx}
+                                        className={`h-1 rounded-full transition-all duration-500 box-content border border-black/10 ${idx === currentImageIndex ? 'bg-white w-8 opacity-100' : 'bg-white/40 w-2 hover:w-4 opacity-70'}`}
+                                    />
+                                ))}
+                            </div>
+                        </>
+                    )}
+                </div>
             </div>
 
-            {/* Text Overlay - Centered with Mix Blend Mode AND Shadow for visibility */}
-            <div className="absolute inset-0 z-20 flex flex-col items-center justify-center pointer-events-none mix-blend-difference">
+            {/* Text Overlay - Centered - NO Mix Blend Mode */}
+            <div className="absolute inset-0 z-20 flex flex-col items-center justify-center pointer-events-none">
                 {slide.isMain ? (
                     // Main Intro Styling
                     <motion.div
                         initial={{ opacity: 0, y: 30 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ delay: 1, duration: 1 }}
-                        className="flex flex-col items-center text-white"
+                        className="flex flex-col items-center"
                     >
-                        <h1 className="text-[12vw] leading-[0.8] font-bold tracking-tighter text-center uppercase whitespace-nowrap">
+                        <h1 className="text-[12vw] leading-[0.8] font-bold tracking-tighter text-center uppercase whitespace-nowrap text-transparent bg-clip-text bg-gradient-to-r from-[#00ADB5] to-black">
                             {slide.title}
                         </h1>
-                        <p className="text-[4vw] font-light tracking-[0.5em] text-center uppercase mt-2 md:mt-6">
+                        <p className="text-[4vw] font-light tracking-[0.5em] text-center uppercase mt-2 md:mt-6 text-black">
                             {slide.subtitle}
                         </p>
                     </motion.div>
                 ) : (
                     // Category Header Styling
-                    <div className="flex flex-col items-center text-white overflow-hidden">
+                    <div className="flex flex-col items-center overflow-hidden">
                         {/* Animate IN from Side (Left) */}
-                        <h2 className="text-6xl md:text-8xl font-bold tracking-tighter uppercase text-center opacity-0 group-hover:opacity-100 transform -translate-x-full group-hover:translate-x-0 transition-all duration-700 ease-out">
+                        <h2 className="text-6xl md:text-8xl font-bold tracking-tighter uppercase text-center opacity-0 group-hover:opacity-100 transform -translate-x-full group-hover:translate-x-0 transition-all duration-700 ease-out text-transparent bg-clip-text bg-gradient-to-r from-[#00ADB5] to-black">
                             {slide.title}
                         </h2>
                         {/* Animate IN from Side (Right) */}
-                        <p className="text-xl md:text-3xl font-light tracking-[0.1em] uppercase mt-4 opacity-0 group-hover:opacity-100 transform translate-x-full group-hover:translate-x-0 transition-all duration-700 delay-100 ease-out">
+                        <p className="text-xl md:text-3xl font-light tracking-[0.1em] uppercase mt-4 opacity-0 group-hover:opacity-100 transform translate-x-full group-hover:translate-x-0 transition-all duration-700 delay-100 ease-out text-black">
                             {slide.subtitle}
                         </p>
                     </div>
