@@ -117,7 +117,7 @@ function CarouselSlide({ slide }: { slide: typeof SLIDES[0] }) {
     return (
         <section
             ref={sectionRef}
-            className="relative h-screen min-w-full md:w-full flex-shrink-0 snap-start flex flex-col items-center justify-center overflow-hidden bg-white group/section"
+            className="relative h-full min-w-full md:w-full flex-shrink-0 snap-start flex flex-col items-center justify-center overflow-hidden bg-white group/section"
             onTouchStart={handleTouchStart}
             onTouchEnd={handleTouchEnd}
         >
@@ -222,7 +222,7 @@ function CarouselSlide({ slide }: { slide: typeof SLIDES[0] }) {
 
 export function ConceptHome() {
     return (
-        <div className="h-screen w-full flex md:flex-col overflow-x-scroll md:overflow-x-hidden overflow-y-hidden md:overflow-y-scroll snap-x md:snap-y snap-mandatory bg-white text-[#1f2a33]">
+        <div className="h-full w-full flex md:flex-col overflow-x-scroll md:overflow-x-hidden overflow-y-hidden md:overflow-y-scroll snap-x md:snap-y snap-mandatory bg-white text-[#1f2a33]">
             {SLIDES.map((slide) => (
                 <CarouselSlide key={slide.id} slide={slide} />
             ))}
