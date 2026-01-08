@@ -2,6 +2,7 @@ import { motion, AnimatePresence, useInView } from 'framer-motion'
 import { Link } from 'react-router-dom'
 import { useState, useEffect, useCallback, useRef } from 'react'
 import { FiChevronLeft, FiChevronRight } from 'react-icons/fi'
+import { ShatterText } from '../components/ShatterText'
 
 // --- USER CONFIGURATION ---
 const SLIDES = [
@@ -184,16 +185,14 @@ function CarouselSlide({ slide }: { slide: typeof SLIDES[0] }) {
                         transition={{ delay: 1, duration: 1 }}
                         className="flex flex-col items-center"
                     >
-                        <h1 className="text-6xl md:text-8xl lg:text-[10vw] leading-none font-bold tracking-tighter text-center uppercase whitespace-nowrap text-transparent bg-clip-text bg-gradient-to-r from-[#00ADB5] to-white">
-                            {slide.title}
-                        </h1>
+                        <ShatterText label={slide.title} className="text-[#F6F1F1]" />
                         <p className="text-xl md:text-2xl lg:text-[2vw] font-light tracking-[0.5em] text-center uppercase mt-4 text-white">
                             {slide.subtitle}
                         </p>
                     </motion.div>
                 ) : (
                     <div className="flex flex-col items-center overflow-hidden">
-                        <h2 className="text-5xl md:text-7xl lg:text-[8vw] font-bold tracking-tighter uppercase text-center opacity-0 group-hover/section:opacity-100 transform -translate-x-full group-hover/section:translate-x-0 transition-all duration-700 ease-out text-transparent bg-clip-text bg-gradient-to-r from-[#00ADB5] to-white">
+                        <h2 className="text-5xl md:text-7xl lg:text-[8vw] font-bold tracking-tighter uppercase text-center opacity-0 group-hover/section:opacity-100 transform -translate-x-full group-hover/section:translate-x-0 transition-all duration-700 ease-out text-transparent bg-clip-text bg-gradient-to-r from-[#19A7CE] to-white">
                             {slide.title}
                         </h2>
                         <p className="text-lg md:text-xl lg:text-3xl font-light tracking-[0.1em] uppercase mt-4 opacity-0 group-hover/section:opacity-100 transform translate-x-full group-hover/section:translate-x-0 transition-all duration-700 delay-100 ease-out text-white">
@@ -211,7 +210,7 @@ function CarouselSlide({ slide }: { slide: typeof SLIDES[0] }) {
                     onMouseLeave={() => setIsTextHovered(false)}
                 >
                     <Link to="/booking">
-                        <button className="px-10 py-4 border-2 border-[#00ADB5] bg-[#00ADB5] text-[#1f2a33] text-xl tracking-widest uppercase hover:bg-black hover:border-black hover:text-white transition-all duration-300 shadow-[0_0_30px_rgba(0,173,181,0.4)] hover:shadow-[0_0_40px_rgba(0,0,0,0.5)]">
+                        <button className="px-10 py-4 border-2 border-[#19A7CE] bg-[#19A7CE] text-[#000000] text-xl tracking-widest uppercase hover:bg-black hover:border-black hover:text-white transition-all duration-300 shadow-[0_0_30px_rgba(25,167,206,0.4)] hover:shadow-[0_0_40px_rgba(0,0,0,0.5)]">
                             Book Now
                         </button>
                     </Link>
@@ -223,12 +222,12 @@ function CarouselSlide({ slide }: { slide: typeof SLIDES[0] }) {
 
 export function ConceptHome() {
     return (
-        <div className="h-[100dvh] w-full flex flex-col overflow-hidden overflow-y-scroll snap-y snap-mandatory bg-white text-[#1f2a33]">
+        <div className="h-[100dvh] w-full flex flex-col overflow-hidden overflow-y-scroll snap-y snap-mandatory bg-white text-[#000000]">
             {SLIDES.map((slide) => (
                 <CarouselSlide key={slide.id} slide={slide} />
             ))}
 
-            <div className="fixed bottom-8 left-1/2 -translate-x-1/2 text-[#1f2a33]/70 animate-bounce pointer-events-none z-30">
+            <div className="fixed bottom-8 left-1/2 -translate-x-1/2 text-[#000000]/70 animate-bounce pointer-events-none z-30">
                 <span className="text-xs uppercase tracking-[0.3em]">Scroll</span>
             </div>
         </div>
