@@ -1,6 +1,6 @@
 import { motion, AnimatePresence } from 'framer-motion'
 import { Link } from 'react-router-dom'
-import { useState, useEffect, useCallback } from 'react'
+import { useState, useEffect, useCallback, useRef } from 'react'
 import { FiChevronLeft, FiChevronRight } from 'react-icons/fi'
 
 // --- USER CONFIGURATION ---
@@ -48,6 +48,8 @@ const SLIDES = [
 function CarouselSlide({ slide }: { slide: typeof SLIDES[0] }) {
     const [currentImageIndex, setCurrentImageIndex] = useState(0)
     const [isTextHovered, setIsTextHovered] = useState(false)
+    const [isMobileColor, setIsMobileColor] = useState(false)
+    const autoColorTimerRef = useRef<NodeJS.Timeout | null>(null)
 
     const nextImage = useCallback(() => {
         setCurrentImageIndex((prev) => (prev + 1) % slide.images.length)
@@ -57,7 +59,7 @@ function CarouselSlide({ slide }: { slide: typeof SLIDES[0] }) {
         setCurrentImageIndex((prev) => (prev - 1 + slide.images.length) % slide.images.length)
     }, [slide.images.length])
 
-    // Preload the next image to prevent glitches
+    // Preload the next image
     useEffect(() => {
         if (slide.images.length <= 1) return
         const nextIndex = (currentImageIndex + 1) % slide.images.length
@@ -66,23 +68,51 @@ function CarouselSlide({ slide }: { slide: typeof SLIDES[0] }) {
     }, [currentImageIndex, slide.images])
 
     useEffect(() => {
-        // Only auto-advance if there's more than one image
         if (slide.images.length <= 1) return
-
         const timer = setInterval(() => {
             nextImage()
-        }, 12000) // Change image every 12 seconds (slower)
-
+        }, 12000)
         return () => clearInterval(timer)
     }, [slide.images.length, nextImage])
 
-    return (
-        <section className="relative h-screen w-full snap-start flex flex-col items-center justify-center overflow-hidden bg-white group/section">
+    // Mobile Auto-Color Logic
+    useEffect(() => {
+        const startTimer = () => {
+            if (autoColorTimerRef.current) clearTimeout(autoColorTimerRef.current)
+            autoColorTimerRef.current = setTimeout(() => {
+                setIsMobileColor(true)
+            }, 4000) // Auto-color after 4 seconds
+        }
 
-            {/* Image Container with Padding - creates the white border effect */}
+        startTimer()
+        return () => {
+            if (autoColorTimerRef.current) clearTimeout(autoColorTimerRef.current)
+        }
+    }, [currentImageIndex])
+
+    const handleTouchStart = () => {
+        if (autoColorTimerRef.current) clearTimeout(autoColorTimerRef.current)
+        setIsMobileColor(true)
+    }
+
+    const handleTouchEnd = () => {
+        setIsMobileColor(false)
+        // Restart timer on release
+        if (autoColorTimerRef.current) clearTimeout(autoColorTimerRef.current)
+        autoColorTimerRef.current = setTimeout(() => {
+            setIsMobileColor(true)
+        }, 4000)
+    }
+
+    return (
+        <section
+            className="relative h-screen min-w-full md:w-full snap-start flex flex-col items-center justify-center overflow-hidden bg-white group/section"
+            onTouchStart={handleTouchStart}
+            onTouchEnd={handleTouchEnd}
+        >
+            {/* Image Container */}
             <div className="absolute inset-0 w-full h-full p-4 md:p-12 flex items-center justify-center">
                 <div className="relative w-full h-full overflow-hidden shadow-sm">
-                    {/* Seamless Crossfade: Removing mode="wait" so images overlap */}
                     <AnimatePresence>
                         <motion.img
                             key={currentImageIndex}
@@ -95,12 +125,12 @@ function CarouselSlide({ slide }: { slide: typeof SLIDES[0] }) {
                             }}
                             src={slide.images[currentImageIndex]}
                             alt={slide.title}
-                            // NEW HOVER LOGIC: Black and white by default, color only on text hover
-                            className={`absolute inset-0 w-full h-full object-cover transition-all duration-1000 ${isTextHovered ? 'grayscale-0' : 'grayscale'}`}
+                            // Logic: Color if text is hovered OR mobile color is active
+                            className={`absolute inset-0 w-full h-full object-cover transition-all duration-1000 ${(isTextHovered || isMobileColor) ? 'grayscale-0' : 'grayscale'}`}
                         />
                     </AnimatePresence>
 
-                    {/* Carousel Controls (only if > 1 image) */}
+                    {/* Carousel Controls */}
                     {slide.images.length > 1 && (
                         <>
                             <button
@@ -130,14 +160,13 @@ function CarouselSlide({ slide }: { slide: typeof SLIDES[0] }) {
                 </div>
             </div>
 
-            {/* Text Overlay - Centered - Added drop-shadow for improved visibility */}
+            {/* Text Overlay */}
             <div
                 className="absolute inset-0 z-20 flex flex-col items-center justify-center pointer-events-auto"
                 onMouseEnter={() => setIsTextHovered(true)}
                 onMouseLeave={() => setIsTextHovered(false)}
             >
                 {slide.isMain ? (
-                    // Main Intro Styling
                     <motion.div
                         initial={{ opacity: 0, y: 30 }}
                         animate={{ opacity: 1, y: 0 }}
@@ -152,13 +181,10 @@ function CarouselSlide({ slide }: { slide: typeof SLIDES[0] }) {
                         </p>
                     </motion.div>
                 ) : (
-                    // Category Header Styling
                     <div className="flex flex-col items-center overflow-hidden">
-                        {/* Animate IN from Side (Left) */}
                         <h2 className="text-7xl md:text-9xl font-bold tracking-tighter uppercase text-center opacity-0 group-hover/section:opacity-100 transform -translate-x-full group-hover/section:translate-x-0 transition-all duration-700 ease-out text-transparent bg-clip-text bg-gradient-to-r from-[#00ADB5] to-black drop-shadow-[0_0_15px_rgba(255,255,255,0.8)]">
                             {slide.title}
                         </h2>
-                        {/* Animate IN from Side (Right) */}
                         <p className="text-xl md:text-3xl font-light tracking-[0.1em] uppercase mt-4 opacity-0 group-hover/section:opacity-100 transform translate-x-full group-hover/section:translate-x-0 transition-all duration-700 delay-100 ease-out text-black drop-shadow-[0_0_10px_rgba(255,255,255,0.5)]">
                             {slide.subtitle}
                         </p>
@@ -186,7 +212,7 @@ function CarouselSlide({ slide }: { slide: typeof SLIDES[0] }) {
 
 export function ConceptHome() {
     return (
-        <div className="h-screen w-full overflow-y-scroll snap-y snap-mandatory bg-white text-[#1f2a33]">
+        <div className="h-screen w-full flex md:flex-col overflow-x-scroll md:overflow-x-hidden overflow-y-hidden md:overflow-y-scroll snap-x md:snap-y snap-mandatory bg-white text-[#1f2a33]">
             {SLIDES.map((slide) => (
                 <CarouselSlide key={slide.id} slide={slide} />
             ))}
