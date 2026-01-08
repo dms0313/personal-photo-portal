@@ -45,7 +45,7 @@ const SLIDES = [
     }
 ]
 
-function CarouselSlide({ slide, index }: { slide: typeof SLIDES[0], index: number }) {
+function CarouselSlide({ slide }: { slide: typeof SLIDES[0] }) {
     const [currentImageIndex, setCurrentImageIndex] = useState(0)
 
     const nextImage = useCallback(() => {
@@ -180,8 +180,8 @@ function CarouselSlide({ slide, index }: { slide: typeof SLIDES[0], index: numbe
 export function ConceptHome() {
     return (
         <div className="h-screen w-full overflow-y-scroll snap-y snap-mandatory bg-white text-[#1f2a33]">
-            {SLIDES.map((slide, index) => (
-                <CarouselSlide key={slide.id} slide={slide} index={index} />
+            {SLIDES.map((slide) => (
+                <CarouselSlide key={slide.id} slide={slide} />
             ))}
 
             <div className="fixed bottom-8 left-1/2 -translate-x-1/2 text-[#1f2a33]/70 animate-bounce pointer-events-none z-30">
