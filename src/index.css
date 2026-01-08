@@ -1,4 +1,5 @@
 @import 'tailwindcss';
+@import url('https://fonts.googleapis.com/css2?family=Sofia+Sans+Semi+Condensed:ital,wght@0,100..900;1,100..900&display=swap');
 
 @theme inline {
   --color-background: var(--background);
@@ -38,6 +39,7 @@
 
   body {
     @apply bg-background text-foreground antialiased;
+    font-family: "Sofia Sans Semi Condensed", sans-serif;
     font-feature-settings: "rlig" 1, "calt" 1;
   }
 }
@@ -49,7 +51,8 @@
   }
 
   .text-gradient {
-    @apply bg-clip-text text-transparent bg-gradient-to-r from-[#19A7CE] to-black;
+    @apply bg-clip-text text-transparent bg-gradient-to-r from-[#035b75] to-[#19A7CE] drop-shadow-md;
+    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.5));
   }
 
   .text-inverse {
@@ -66,7 +69,7 @@
     height: auto;
   }
 
-  .hero-shatter svg > * {
+  .hero-shatter svg>* {
     fill: currentColor;
     stroke: currentColor;
     stroke-width: 0.85px;
@@ -79,6 +82,16 @@
   @keyframes shimmer {
     100% {
       transform: translateX(100%);
+    }
+  }
+
+  @keyframes slowZoom {
+    from {
+      transform: scale(1);
+    }
+
+    to {
+      transform: scale(1.08);
     }
   }
 }
@@ -286,4 +299,368 @@
 .intro-delay-8 {
   animation-delay: 0.8s;
   opacity: 0;
+}
+
+/* Hero Title Letter Animation */
+.hero-title {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.hero-letter {
+  display: inline-block;
+  opacity: 0;
+  transform: translateY(30px) rotateX(-90deg);
+  animation: heroLetterReveal 0.7s ease-out forwards;
+}
+
+
+
+@keyframes heroLetterReveal {
+  0% {
+    opacity: 0;
+    transform: translateY(30px) rotateX(-90deg);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translateY(0) rotateX(0);
+  }
+}
+
+/* ==========================================
+   CAROUSEL SLIDER STYLES
+   ========================================== */
+
+/* Carousel CSS Variables */
+.carousel-container,
+.carousel-section {
+  --carousel-gap: 1.25rem;
+  --carousel-speed: 0.55s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  --carousel-closed: 5rem;
+  --carousel-open: 30rem;
+  --carousel-accent: #19A7CE;
+}
+
+/* Carousel Header */
+.carousel-head {
+  max-width: 1400px;
+  margin: auto;
+  padding: 70px 20px 40px;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: 2rem;
+}
+
+.carousel-head h2 {
+  font: 400 1.5rem/1.2 Inter, sans-serif;
+  color: #fff;
+}
+
+@media (min-width: 1024px) {
+  .carousel-head h2 {
+    font-size: 2.25rem;
+  }
+}
+
+/* Navigation Buttons */
+.carousel-nav-btn {
+  width: 2.5rem;
+  height: 2.5rem;
+  border: none;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.12);
+  color: #fff;
+  font-size: 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.carousel-nav-btn:hover {
+  background: var(--carousel-accent);
+}
+
+.carousel-nav-btn:disabled {
+  opacity: 0.3;
+  cursor: default;
+}
+
+/* Slider Container */
+.carousel-slider {
+  max-width: 1400px;
+  margin: auto;
+  overflow: hidden;
+}
+
+/* Controls */
+.carousel-controls {
+  display: flex;
+  flex-direction: row;
+  gap: 0.5rem;
+}
+
+/* Track */
+.carousel-track {
+  display: flex;
+  gap: var(--carousel-gap);
+  align-items: flex-start;
+  justify-content: center;
+  scroll-behavior: smooth;
+  scroll-snap-type: x mandatory;
+  padding-bottom: 40px;
+}
+
+.carousel-track::-webkit-scrollbar {
+  display: none;
+}
+
+/* Project Card */
+.carousel-card {
+  position: relative;
+  flex: 0 0 var(--carousel-closed);
+  height: 70vh;
+  border-radius: 1rem;
+  overflow: hidden;
+  cursor: pointer;
+  transition: flex-basis var(--carousel-speed), transform var(--carousel-speed);
+}
+
+.carousel-card[active] {
+  flex-basis: var(--carousel-open);
+  transform: translateY(-6px);
+  box-shadow: 0 18px 55px rgba(0, 0, 0, 0.45);
+}
+
+.carousel-card__bg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  filter: grayscale(100%) brightness(0.7);
+  transition: filter 0.5s ease, transform var(--carousel-speed);
+}
+
+.carousel-card:hover .carousel-card__bg {
+  filter: grayscale(0%) brightness(1);
+  transform: scale(1.06);
+}
+
+/* Card Content */
+.carousel-card__content {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 0.7rem;
+  padding: 0;
+  background: linear-gradient(transparent 40%, rgba(0, 0, 0, 0.85) 100%);
+  z-index: 2;
+}
+
+.carousel-card__title {
+  color: #fff;
+  font-weight: 700;
+  font-size: 1.35rem;
+  writing-mode: vertical-rl;
+  transform: rotate(180deg);
+}
+
+.carousel-card__thumb,
+.carousel-card__desc,
+.carousel-card__btn {
+  display: none;
+}
+
+.carousel-card[active] .carousel-card__content {
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+  gap: 1.5rem;
+}
+
+.carousel-card[active] .carousel-card__title {
+  writing-mode: horizontal-tb;
+  transform: none;
+  font-size: 3rem;
+  text-align: center;
+}
+
+.carousel-card[active] .carousel-card__desc,
+.carousel-card[active] .carousel-card__btn {
+  display: block;
+}
+
+.carousel-card__thumb {
+  width: 133px;
+  height: 269px;
+  border-radius: 0.45rem;
+  object-fit: cover;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
+}
+
+.carousel-card__desc {
+  color: #ddd;
+  font-size: 1.2rem;
+  line-height: 1.5;
+  max-width: 20rem;
+  text-align: center;
+}
+
+.carousel-card__btn {
+  padding: 0.55rem 1.3rem;
+  border: none;
+  border-radius: 9999px;
+  background: var(--carousel-accent);
+  color: #fff;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.carousel-card__btn:hover {
+  background: #ff824f;
+}
+
+/* Dots */
+.carousel-dots {
+  display: flex;
+  gap: 0.5rem;
+  justify-content: center;
+  padding: 20px 0;
+}
+
+.carousel-dot {
+  width: 13px;
+  height: 13px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.35);
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.carousel-dot.active {
+  background: var(--carousel-accent);
+  transform: scale(1.2);
+}
+
+/* Mobile Responsiveness */
+@media (max-width: 767px) {
+  .carousel-container {
+    --carousel-closed: 100%;
+    --carousel-open: 100%;
+    --carousel-gap: 0.8rem;
+  }
+
+  .carousel-head {
+    padding: 30px 15px 20px;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+
+  .carousel-slider {
+    padding: 0 15px;
+    width: 100%;
+  }
+
+  .carousel-track {
+    flex-direction: column;
+    scroll-snap-type: y mandatory;
+    gap: 0.8rem;
+    padding-bottom: 20px;
+    width: 100%;
+  }
+
+  .carousel-card {
+    height: auto;
+    min-height: 80px;
+    flex: 0 0 auto;
+    width: 100%;
+    scroll-snap-align: start;
+  }
+
+  .carousel-card[active] {
+    min-height: 300px;
+    transform: none;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+  }
+
+  .carousel-card__content {
+    flex-direction: row;
+    justify-content: flex-start;
+    padding: 1rem;
+    align-items: center;
+    gap: 1rem;
+  }
+
+  .carousel-card__title {
+    writing-mode: horizontal-tb;
+    transform: none;
+    font-size: 1.2rem;
+    margin-right: auto;
+  }
+
+  .carousel-card__thumb,
+  .carousel-card__desc,
+  .carousel-card__btn {
+    display: none;
+  }
+
+  .carousel-card[active] .carousel-card__content {
+    align-items: flex-start;
+    padding: 1.5rem;
+  }
+
+  .carousel-card[active] .carousel-card__title {
+    font-size: 1.8rem;
+    margin-bottom: 1rem;
+    margin-top: 2rem;
+  }
+
+  .carousel-card[active] .carousel-card__thumb {
+    width: 200px;
+    height: 267px;
+    border-radius: 0.35rem;
+    margin-bottom: 1rem;
+  }
+
+  .carousel-card[active] .carousel-card__desc {
+    font-size: 0.95rem;
+    max-width: 100%;
+    margin-bottom: 1rem;
+  }
+
+  .carousel-card[active] .carousel-card__btn {
+    align-self: center;
+    width: 100%;
+    text-align: center;
+    padding: 0.7rem;
+  }
+
+  .carousel-dots {
+    display: none;
+  }
+
+  .carousel-controls {
+    width: 100%;
+    justify-content: space-between;
+    padding: 0 15px 20px;
+  }
+
+  .carousel-nav-btn {
+    position: static;
+    transform: none;
+    width: 2rem;
+    height: 2rem;
+    font-size: 1.2rem;
+  }
 }

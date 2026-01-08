@@ -1,234 +1,249 @@
-import { motion, AnimatePresence, useInView } from 'framer-motion'
+import { useEffect, useRef, useCallback, useState } from 'react'
 import { Link } from 'react-router-dom'
-import { useState, useEffect, useCallback, useRef } from 'react'
 import { FiChevronLeft, FiChevronRight } from 'react-icons/fi'
-import { ShatterText } from '../components/ShatterText'
 
-// --- USER CONFIGURATION ---
+// --- CAROUSEL SLIDES ---
 const SLIDES = [
-    {
-        id: 'intro',
-        title: 'Dan Sullivan',
-        subtitle: 'Photographer',
-        images: [
-            'https://ik.imagekit.io/dmsully/_MG_4017%20(1).JPG?updatedAt=1765570239624'
-        ],
-        isMain: true
-    },
     {
         id: 'portraits',
         title: 'PORTRAITS',
         subtitle: 'Senior Photos • Business Headshots',
-        images: [
-            'https://ik.imagekit.io/dmsully/DS252153.jpg?updatedAt=1767658772217',
-            'https://ik.imagekit.io/dmsully/DS252112.jpg?updatedAt=1767658772112'
-            // Removed duplicate intro image to fix "popping" bug
-        ],
+        image: 'https://ik.imagekit.io/dmsully/DS252153.jpg?updatedAt=1767658772217',
     },
     {
         id: 'events',
         title: 'EVENTS',
         subtitle: 'Weddings • Corporate Events • Sports',
-        images: [
-            'https://ik.imagekit.io/dmsully/_MG_4396.png?updatedAt=1765570258586',
-            'https://ik.imagekit.io/dmsully/RKB10507.png?updatedAt=1765570245001'
-        ],
+        image: 'https://ik.imagekit.io/dmsully/_MG_4396.png?updatedAt=1765570258586',
     },
     {
         id: 'more',
         title: '& MORE',
         subtitle: 'Drone Photography/Videography • Pets • Advertising',
-        images: [
-            'https://ik.imagekit.io/dmsully/DJI_0052.JPG?updatedAt=1767706979048',
-            'https://ik.imagekit.io/dmsully/DJI_0461.png?updatedAt=1767706979294'
-        ],
-        showCta: true
+        image: 'https://ik.imagekit.io/dmsully/DJI_0052.JPG?updatedAt=1767706979048',
     }
 ]
 
-function CarouselSlide({ slide }: { slide: typeof SLIDES[0] }) {
-    const [currentImageIndex, setCurrentImageIndex] = useState(0)
-    const [isTextHovered, setIsTextHovered] = useState(false)
-    const [isMobileColor, setIsMobileColor] = useState(false)
+// --- CAROUSEL SECTION ---
+// --- CAROUSEL SECTION ---
+function CarouselSection() {
+    const scrollContainerRef = useRef<HTMLDivElement>(null)
+    const [activeIndex, setActiveIndex] = useState(0)
 
-    const sectionRef = useRef<HTMLElement>(null)
-    const isInView = useInView(sectionRef, { amount: 0.3 }) // Trigger when 30% visible
-    const autoColorTimerRef = useRef<any>(null) // Use 'any' to avoid NodeJS vs Browser type conflict
+    // Data
+    const items = [
+        { id: 1, title: 'PORTRAITS', image: 'https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?auto=format&fit=crop&q=80&w=1000', desc: 'Capturing the essence of personality in every frame.' },
+        { id: 2, title: 'LIFESTYLE', image: 'https://images.unsplash.com/photo-1511895426328-dc8714191300?auto=format&fit=crop&q=80&w=1000', desc: 'Candid moments that tell your unique story.' },
+        { id: 3, title: 'EVENTS', image: 'https://images.unsplash.com/photo-1519671482538-5810e2896e3d?auto=format&fit=crop&q=80&w=1000', desc: 'Preserving memories from your most special days.' },
+        { id: 4, title: 'EDITORIAL', image: 'https://images.unsplash.com/photo-1469334031218-e382a71b716b?auto=format&fit=crop&q=80&w=1000', desc: 'Fashion and conceptual photography for brands.' },
+        { id: 5, title: 'TRAVEL', image: 'https://images.unsplash.com/photo-1476514525535-07fb3b4ae5f1?auto=format&fit=crop&q=80&w=1000', desc: 'Landscapes and cultures from around the world.' },
+    ]
 
-    const nextImage = useCallback(() => {
-        setCurrentImageIndex((prev) => (prev + 1) % slide.images.length)
-    }, [slide.images.length])
-
-    const prevImage = useCallback(() => {
-        setCurrentImageIndex((prev) => (prev - 1 + slide.images.length) % slide.images.length)
-    }, [slide.images.length])
-
-    // Preload the next image
-    useEffect(() => {
-        if (slide.images.length <= 1) return
-        const nextIndex = (currentImageIndex + 1) % slide.images.length
-        const img = new Image()
-        img.src = slide.images[nextIndex]
-    }, [currentImageIndex, slide.images])
-
-    // Carousel Auto-Advance: Only when in view
-    useEffect(() => {
-        if (!isInView || slide.images.length <= 1) return
-
-        const timer = setInterval(() => {
-            nextImage()
-        }, 12000)
-        return () => clearInterval(timer)
-    }, [isInView, slide.images.length, nextImage])
-
-    // Mobile Auto-Color Logic: Only when in view
-    useEffect(() => {
-        if (!isInView) {
-            setIsMobileColor(false)
-            if (autoColorTimerRef.current) clearTimeout(autoColorTimerRef.current)
-            return
-        }
-
-        const startTimer = () => {
-            if (autoColorTimerRef.current) clearTimeout(autoColorTimerRef.current)
-            autoColorTimerRef.current = setTimeout(() => {
-                setIsMobileColor(true)
-            }, 4000)
-        }
-
-        startTimer()
-        return () => {
-            if (autoColorTimerRef.current) clearTimeout(autoColorTimerRef.current)
-        }
-    }, [isInView, currentImageIndex])
-
-    const handleTouchStart = () => {
-        if (autoColorTimerRef.current) clearTimeout(autoColorTimerRef.current)
-        setIsMobileColor(true)
-    }
-
-    const handleTouchEnd = () => {
-        setIsMobileColor(false)
-        if (autoColorTimerRef.current) clearTimeout(autoColorTimerRef.current)
-        autoColorTimerRef.current = setTimeout(() => {
-            setIsMobileColor(true)
-        }, 4000)
+    const handleScroll = () => {
+        if (!scrollContainerRef.current) return
+        // logic
     }
 
     return (
-        <section
-            ref={sectionRef}
-            className="relative h-[100dvh] min-w-full md:w-full flex-shrink-0 snap-start flex flex-col items-center justify-center overflow-hidden bg-white group/section"
-            onTouchStart={handleTouchStart}
-            onTouchEnd={handleTouchEnd}
-        >
-            {/* Image Container */}
-            <div className="absolute inset-0 w-full h-full p-4 md:p-12 flex items-center justify-center">
-                <div className="relative w-full h-full overflow-hidden shadow-sm">
-                    <AnimatePresence>
-                        <motion.img
-                            key={currentImageIndex}
-                            initial={{ opacity: 0, scale: 1.1, x: 50 }}
-                            animate={{ opacity: 1, scale: 1.0, x: 0 }}
-                            exit={{ opacity: 0 }}
-                            transition={{
-                                opacity: { duration: 2.0, ease: "easeInOut" },
-                                scale: { duration: 12, ease: "linear" },
-                                x: { duration: 2.0, ease: "easeOut" }
-                            }}
-                            src={slide.images[currentImageIndex]}
-                            alt={slide.title}
-                            className={`absolute inset-0 w-full h-full object-cover transition-all duration-1000 ${(isTextHovered || isMobileColor) ? 'grayscale-0' : 'grayscale'}`}
-                        />
-                    </AnimatePresence>
-
-                    {/* Carousel Controls */}
-                    {slide.images.length > 1 && (
-                        <>
-                            <button
-                                onClick={(e) => { e.stopPropagation(); prevImage(); }}
-                                className="absolute left-6 top-1/2 -translate-y-1/2 z-30 p-3 rounded-full bg-black/20 hover:bg-black/40 backdrop-blur-md text-white/70 hover:text-white opacity-0 group-hover/section:opacity-100 transition-all duration-300"
-                            >
-                                <FiChevronLeft size={32} />
-                            </button>
-                            <button
-                                onClick={(e) => { e.stopPropagation(); nextImage(); }}
-                                className="absolute right-6 top-1/2 -translate-y-1/2 z-30 p-3 rounded-full bg-black/20 hover:bg-black/40 backdrop-blur-md text-white/70 hover:text-white opacity-0 group-hover/section:opacity-100 transition-all duration-300"
-                            >
-                                <FiChevronRight size={32} />
-                            </button>
-
-                            {/* Indicators */}
-                            <div className="absolute bottom-6 left-1/2 -translate-x-1/2 z-30 flex gap-3">
-                                {slide.images.map((_, idx) => (
-                                    <div
-                                        key={idx}
-                                        className={`h-1 rounded-full transition-all duration-500 box-content border border-black/10 ${idx === currentImageIndex ? 'bg-white w-8 opacity-100' : 'bg-white/40 w-2 hover:w-4 opacity-70'}`}
-                                    />
-                                ))}
-                            </div>
-                        </>
-                    )}
-                </div>
+        <section className="carousel-section min-h-[100vh] flex flex-col justify-end pb-20 relative snap-start bg-transparent">
+            <div className="carousel-head w-full max-w-[1400px] mx-auto px-5 mb-8 flex justify-between items-end">
+                <h2 className="text-white text-4xl md:text-6xl font-[790] tracking-tighter">
+                    SELECTED <br /> <span className="text-[#19A7CE]">WORKS</span>
+                </h2>
             </div>
-
-            {/* Text Overlay */}
-            <div
-                className="absolute inset-0 z-20 flex flex-col items-center justify-center pointer-events-auto"
-                onMouseEnter={() => setIsTextHovered(true)}
-                onMouseLeave={() => setIsTextHovered(false)}
-            >
-                {slide.isMain ? (
-                    <motion.div
-                        initial={{ opacity: 0, y: 30 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ delay: 1, duration: 1 }}
-                        className="flex flex-col items-center"
-                    >
-                        <ShatterText label={slide.title} className="text-[#F6F1F1]" />
-                        <p className="text-xl md:text-2xl lg:text-[2vw] font-light tracking-[0.5em] text-center uppercase mt-4 text-white">
-                            {slide.subtitle}
-                        </p>
-                    </motion.div>
-                ) : (
-                    <div className="flex flex-col items-center overflow-hidden">
-                        <h2 className="text-5xl md:text-7xl lg:text-[8vw] font-bold tracking-tighter uppercase text-center opacity-0 group-hover/section:opacity-100 transform -translate-x-full group-hover/section:translate-x-0 transition-all duration-700 ease-out text-transparent bg-clip-text bg-gradient-to-r from-[#19A7CE] to-white">
-                            {slide.title}
-                        </h2>
-                        <p className="text-lg md:text-xl lg:text-3xl font-light tracking-[0.1em] uppercase mt-4 opacity-0 group-hover/section:opacity-100 transform translate-x-full group-hover/section:translate-x-0 transition-all duration-700 delay-100 ease-out text-white">
-                            {slide.subtitle}
-                        </p>
-                    </div>
-                )}
-            </div>
-
-            {/* CTA */}
-            {slide.showCta && (
+            <div className="carousel-slider w-full" style={{ width: '100%' }}>
                 <div
-                    className="absolute bottom-24 z-30 pointer-events-auto opacity-0 group-hover/section:opacity-100 transition-all duration-700 delay-200"
-                    onMouseEnter={() => setIsTextHovered(true)}
-                    onMouseLeave={() => setIsTextHovered(false)}
+                    className="carousel-track"
+                    ref={scrollContainerRef}
+                    onScroll={handleScroll}
                 >
-                    <Link to="/booking">
-                        <button className="px-10 py-4 border-2 border-[#19A7CE] bg-[#19A7CE] text-[#000000] text-xl tracking-widest uppercase hover:bg-black hover:border-black hover:text-white transition-all duration-300 shadow-[0_0_30px_rgba(25,167,206,0.4)] hover:shadow-[0_0_40px_rgba(0,0,0,0.5)]">
-                            Book Now
-                        </button>
-                    </Link>
+                    {items.map((item, index) => (
+                        <div
+                            key={item.id}
+                            className="carousel-card group"
+                            active={activeIndex === index ? "true" : undefined}
+                            onMouseEnter={() => setActiveIndex(index)}
+                            onClick={() => setActiveIndex(index)}
+                        >
+                            <img src={item.image} alt={item.title} className="carousel-card__bg" />
+                            <div className="carousel-card__content">
+                                <h3 className="carousel-card__title font-[790]">{item.title}</h3>
+                                <img src={item.image} alt="Thumb" className="carousel-card__thumb" />
+                                <p className="carousel-card__desc font-medium">{item.desc}</p>
+                                <button className="carousel-card__btn">VIEW PROJECT</button>
+                            </div>
+                        </div>
+                    ))}
                 </div>
-            )}
+            </div>
+
+            <div className="carousel-dots">
+                {items.map((_, i) => (
+                    <div
+                        key={i}
+                        className={`carousel-dot ${i === activeIndex ? 'active' : ''}`}
+                        onClick={() => setActiveIndex(i)}
+                    />
+                ))}
+            </div>
         </section>
     )
 }
 
 export function ConceptHome() {
-    return (
-        <div className="h-[100dvh] w-full flex flex-col overflow-hidden overflow-y-scroll snap-y snap-mandatory bg-white text-[#000000]">
-            {SLIDES.map((slide) => (
-                <CarouselSlide key={slide.id} slide={slide} />
-            ))}
+    const [isIdle, setIsIdle] = useState(false)
+    const [isHoveringPhoto, setIsHoveringPhoto] = useState(false)
+    const [imageLoaded, setImageLoaded] = useState(false)
+    const idleTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
+    const scrollContainerRef = useRef<HTMLDivElement>(null)
 
-            <div className="fixed bottom-8 left-1/2 -translate-x-1/2 text-[#000000]/70 animate-bounce pointer-events-none z-30">
-                <span className="text-xs uppercase tracking-[0.3em]">Scroll</span>
+    // Combined Color State
+    // Color is shown if: IDLE OR Hovering Photo
+    // BUT (Critical): If Hovering UI, we are NOT Hovering Photo.
+    // So "showColor" = isIdle || isHoveringPhoto
+    const showColor = isIdle || isHoveringPhoto
+
+    // Idle Timer Logic
+    useEffect(() => {
+        const resetIdle = () => {
+            setIsIdle(false)
+            if (idleTimerRef.current) clearTimeout(idleTimerRef.current)
+            idleTimerRef.current = setTimeout(() => {
+                setIsIdle(true)
+            }, 4000)
+        }
+
+        // Listeners for activity
+        window.addEventListener('mousemove', resetIdle)
+        window.addEventListener('click', resetIdle)
+        window.addEventListener('touchstart', resetIdle)
+        window.addEventListener('scroll', resetIdle)
+        window.addEventListener('keydown', resetIdle)
+
+        // Start timer initially
+        resetIdle()
+
+        return () => {
+            if (idleTimerRef.current) clearTimeout(idleTimerRef.current)
+            window.removeEventListener('mousemove', resetIdle)
+            window.removeEventListener('click', resetIdle)
+            window.removeEventListener('touchstart', resetIdle)
+            window.removeEventListener('scroll', resetIdle)
+            window.removeEventListener('keydown', resetIdle)
+        }
+    }, [])
+
+    const scrollToCarousel = () => {
+        if (scrollContainerRef.current) {
+            scrollContainerRef.current.scrollTo({
+                top: window.innerHeight,
+                behavior: 'smooth'
+            })
+        }
+    }
+
+    // Hover Handlers
+    const handlePhotoEnter = () => setIsHoveringPhoto(true)
+    const handleUIEnter = (e: React.MouseEvent) => {
+        e.stopPropagation()
+        setIsHoveringPhoto(false)
+    }
+
+    return (
+        <div
+            className="relative h-screen w-full overflow-hidden bg-[#07090d]"
+        >
+            {/* Fixed Background Image */}
+            <div
+                className="fixed inset-0 z-0"
+                onMouseEnter={handlePhotoEnter}
+                onMouseLeave={() => setIsHoveringPhoto(false)}
+            >
+                <img
+                    src="https://ik.imagekit.io/dmsully/_MG_4017%20(1).JPG?updatedAt=1765570239624"
+                    alt="Dan Sullivan Photography"
+                    onLoad={() => setImageLoaded(true)}
+                    className={`w-full h-full object-cover transition-all duration-[1000ms] ease-out
+                        ${imageLoaded ? 'opacity-100 scale-100' : 'opacity-0 scale-110'}
+                        ${showColor ? 'grayscale-0' : 'grayscale'}
+                    `}
+                    style={{
+                        animation: imageLoaded ? 'slowZoom 20s ease-out forwards' : 'none'
+                    }}
+                />
+            </div>
+
+            {/* Floating Book Button - Hidden on Mobile, Visible on Desktop */}
+            <div
+                className="hidden md:block fixed top-24 right-12 z-50 mix-blend-normal"
+                onMouseEnter={handleUIEnter}
+            >
+                <Link to="/booking">
+                    <button className="px-6 py-3 border border-white/50 bg-black/40 backdrop-blur-sm text-white text-sm tracking-widest uppercase hover:bg-white hover:text-black transition-all duration-300 shadow-lg">
+                        Book a Session
+                    </button>
+                </Link>
+            </div>
+
+            {/* Scroll Container */}
+            <div
+                ref={scrollContainerRef}
+                className="absolute inset-0 z-10 overflow-y-scroll snap-y snap-mandatory scroll-smooth"
+            >
+                {/* HERO SECTION */}
+                <section
+                    className="h-[100dvh] w-full snap-start flex flex-col items-center justify-center pointer-events-none"
+                >
+                    <div
+                        className="flex flex-col items-center pointer-events-auto p-4 md:p-12"
+                        onMouseEnter={handleUIEnter} // Hovering text block reverts to B&W
+                    >
+                        {/* Animated Name - Responsive Text Size & Stacking */}
+                        <h1 className="text-[12vw] md:text-8xl lg:text-[9vw] font-[790] tracking-tight text-white hero-title flex flex-col md:flex-row items-center">
+                            {/* DAN - Gradient + Animation (Start at 0.5s) */}
+                            <span className="text-gradient inline-block mr-4 mb-2 md:mb-0">
+                                {['D', 'A', 'N'].map((char, i) => (
+                                    <span
+                                        key={char + i}
+                                        className="hero-letter"
+                                        style={{ animationDelay: `${0.5 + i * 0.05}s` }}
+                                    >
+                                        {char}
+                                    </span>
+                                ))}
+                            </span>
+
+                            {/* SULLIVAN - White + Animation (Start after DAN + space) */}
+                            <span className="inline-flex">
+                                {['S', 'U', 'L', 'L', 'I', 'V', 'A', 'N'].map((char, i) => (
+                                    <span
+                                        key={char + i}
+                                        className="hero-letter"
+                                        // Start after DAN (0.6s) -> 0.65s
+                                        style={{ animationDelay: `${0.65 + i * 0.05}s` }}
+                                    >
+                                        {char}
+                                    </span>
+                                ))}
+                            </span>
+                        </h1>
+                        <p className="text-lg md:text-2xl lg:text-[2vw] font-light tracking-[0.5em] text-center uppercase mt-6 text-white drop-shadow-md">
+                            Photographer
+                        </p>
+
+                        {/* Explore Button - Added semi-transparent background */}
+                        <button
+                            onClick={scrollToCarousel}
+                            className={`mt-12 px-10 py-4 border-2 border-[#19A7CE] bg-black/30 backdrop-blur-sm text-[#19A7CE] text-lg tracking-widest uppercase hover:bg-[#19A7CE] hover:text-white transition-all duration-300 shadow-lg ${imageLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}
+                            style={{ transitionDelay: '1000ms' }}
+                        >
+                            Explore
+                        </button>
+                    </div>
+                </section>
+
+                {/* CAROUSEL SECTION */}
+                <CarouselSection />
             </div>
         </div>
     )
