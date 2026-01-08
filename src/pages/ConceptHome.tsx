@@ -25,67 +25,192 @@ const SLIDES = [
 ]
 
 // --- CAROUSEL SECTION ---
-// --- CAROUSEL SECTION ---
 function CarouselSection() {
-    const scrollContainerRef = useRef<HTMLDivElement>(null)
-    const [activeIndex, setActiveIndex] = useState(0)
+    const trackRef = useRef<HTMLDivElement>(null)
+    const wrapRef = useRef<HTMLDivElement>(null)
+    const dotsRef = useRef<HTMLDivElement>(null)
+    const prevRef = useRef<HTMLButtonElement>(null)
+    const nextRef = useRef<HTMLButtonElement>(null)
+    const currentRef = useRef(0)
+    const touchStart = useRef({ x: 0, y: 0 })
 
-    // Data
-    const items = [
-        { id: 1, title: 'PORTRAITS', image: 'https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?auto=format&fit=crop&q=80&w=1000', desc: 'Capturing the essence of personality in every frame.' },
-        { id: 2, title: 'LIFESTYLE', image: 'https://images.unsplash.com/photo-1511895426328-dc8714191300?auto=format&fit=crop&q=80&w=1000', desc: 'Candid moments that tell your unique story.' },
-        { id: 3, title: 'EVENTS', image: 'https://images.unsplash.com/photo-1519671482538-5810e2896e3d?auto=format&fit=crop&q=80&w=1000', desc: 'Preserving memories from your most special days.' },
-        { id: 4, title: 'EDITORIAL', image: 'https://images.unsplash.com/photo-1469334031218-e382a71b716b?auto=format&fit=crop&q=80&w=1000', desc: 'Fashion and conceptual photography for brands.' },
-        { id: 5, title: 'TRAVEL', image: 'https://images.unsplash.com/photo-1476514525535-07fb3b4ae5f1?auto=format&fit=crop&q=80&w=1000', desc: 'Landscapes and cultures from around the world.' },
-    ]
+    const isMobile = useCallback(() => {
+        return window.matchMedia("(max-width:767px)").matches
+    }, [])
 
-    const handleScroll = () => {
-        if (!scrollContainerRef.current) return
-        // logic
-    }
+    const center = useCallback((i: number) => {
+        const track = trackRef.current
+        const wrap = wrapRef.current
+        if (!track || !wrap) return
+
+        const cards = Array.from(track.children) as HTMLElement[]
+        const card = cards[i]
+        if (!card) return
+
+        const axis = isMobile() ? "top" : "left"
+        const sizeProp = isMobile() ? "clientHeight" : "clientWidth"
+        const startProp = isMobile() ? "offsetTop" : "offsetLeft"
+        const start = card[startProp]
+
+        wrap.scrollTo({
+            [axis]: start - (wrap[sizeProp] / 2 - card[sizeProp] / 2),
+            behavior: "smooth"
+        } as ScrollToOptions)
+    }, [isMobile])
+
+    const toggleUI = useCallback((i: number) => {
+        const track = trackRef.current
+        const dots = dotsRef.current
+        const prev = prevRef.current
+        const next = nextRef.current
+        if (!track || !dots || !prev || !next) return
+
+        const cards = Array.from(track.children)
+        const dotElements = Array.from(dots.children)
+
+        cards.forEach((c, k) => {
+            if (k === i) {
+                c.setAttribute('active', '')
+            } else {
+                c.removeAttribute('active')
+            }
+        })
+
+        dotElements.forEach((d, k) => {
+            d.classList.toggle("active", k === i)
+        })
+
+        prev.disabled = i === 0
+        next.disabled = i === cards.length - 1
+    }, [])
+
+    const activate = useCallback((i: number, scroll: boolean) => {
+        if (i === currentRef.current) return
+        currentRef.current = i
+        toggleUI(i)
+        if (scroll) center(i)
+    }, [toggleUI, center])
+
+    const go = useCallback((step: number) => {
+        const track = trackRef.current
+        if (!track) return
+        const cards = Array.from(track.children)
+        activate(Math.min(Math.max(currentRef.current + step, 0), cards.length - 1), true)
+    }, [activate])
+
+    useEffect(() => {
+        const track = trackRef.current
+        const dots = dotsRef.current
+        if (!track || !dots) return
+
+        // Create dots
+        const cards = Array.from(track.children)
+        dots.innerHTML = ''
+        cards.forEach((_, i) => {
+            const dot = document.createElement("span")
+            dot.className = "carousel-dot"
+            dot.onclick = () => activate(i, true)
+            dots.appendChild(dot)
+        })
+
+        // Initialize
+        toggleUI(0)
+        center(0)
+
+        // Keyboard navigation
+        const handleKeydown = (e: KeyboardEvent) => {
+            if (["ArrowRight", "ArrowDown"].includes(e.key)) go(1)
+            if (["ArrowLeft", "ArrowUp"].includes(e.key)) go(-1)
+        }
+        window.addEventListener("keydown", handleKeydown, { passive: true })
+
+        // Mouse enter handlers for cards
+        const cardElements = Array.from(track.children) as HTMLElement[]
+        cardElements.forEach((card, i) => {
+            const handleMouseEnter = () => {
+                if (window.matchMedia("(hover:hover)").matches) {
+                    activate(i, true)
+                }
+            }
+            const handleClick = () => activate(i, true)
+
+            card.addEventListener("mouseenter", handleMouseEnter)
+            card.addEventListener("click", handleClick)
+        })
+
+        // Touch swipe handlers
+        const handleTouchStart = (e: TouchEvent) => {
+            touchStart.current = {
+                x: e.touches[0].clientX,
+                y: e.touches[0].clientY
+            }
+        }
+
+        const handleTouchEnd = (e: TouchEvent) => {
+            const dx = e.changedTouches[0].clientX - touchStart.current.x
+            const dy = e.changedTouches[0].clientY - touchStart.current.y
+            const mobile = isMobile()
+            if (mobile ? Math.abs(dy) > 60 : Math.abs(dx) > 60) {
+                go((mobile ? dy : dx) > 0 ? -1 : 1)
+            }
+        }
+
+        track.addEventListener("touchstart", handleTouchStart, { passive: true })
+        track.addEventListener("touchend", handleTouchEnd, { passive: true })
+
+        // Hide dots on mobile
+        if (isMobile()) {
+            dots.hidden = true
+        }
+
+        // Resize handler
+        const handleResize = () => center(currentRef.current)
+        window.addEventListener("resize", handleResize)
+
+        return () => {
+            window.removeEventListener("keydown", handleKeydown)
+            window.removeEventListener("resize", handleResize)
+            track.removeEventListener("touchstart", handleTouchStart)
+            track.removeEventListener("touchend", handleTouchEnd)
+        }
+    }, [activate, center, go, toggleUI, isMobile])
+
 
     return (
-        <section className="carousel-section min-h-[100vh] flex flex-col justify-end pb-20 relative snap-start bg-transparent">
-            <div className="carousel-head w-full max-w-[1400px] mx-auto px-5 mb-8 flex justify-between items-end">
-                <h2 className="text-white text-4xl md:text-6xl font-[790] tracking-tighter">
-                    SELECTED <br /> <span className="text-[#19A7CE]">WORKS</span>
-                </h2>
-            </div>
-            <div className="carousel-slider w-full" style={{ width: '100%' }}>
-                <div
-                    className="carousel-track"
-                    ref={scrollContainerRef}
-                    onScroll={handleScroll}
-                >
-                    {items.map((item, index) => (
-                        <div
-                            key={item.id}
+        <section
+            className="carousel-section h-[100dvh] min-w-full flex-shrink-0 snap-start flex flex-col overflow-hidden bg-black/40 backdrop-blur-sm"
+        // bg-black/40 adds the "transparency UI features" and matches landing page vibe
+        >
+            {/* Controls Removed as per request */}
+
+            {/* Slider */}
+            <div className="carousel-slider flex-1 flex items-center" ref={wrapRef}>
+                <div className="carousel-track" id="track" ref={trackRef}>
+                    {SLIDES.map((slide, index) => (
+                        <article
+                            key={slide.id}
                             className="carousel-card group"
-                            active={activeIndex === index ? "true" : undefined}
-                            onMouseEnter={() => setActiveIndex(index)}
-                            onClick={() => setActiveIndex(index)}
+                            {...(index === 0 ? { active: '' } : {})}
                         >
-                            <img src={item.image} alt={item.title} className="carousel-card__bg" />
+                            <img
+                                className="carousel-card__bg grayscale group-hover:grayscale-0 transition-all duration-500"
+                                src={slide.image}
+                                alt={slide.title}
+                            />
                             <div className="carousel-card__content">
-                                <h3 className="carousel-card__title font-[790]">{item.title}</h3>
-                                <img src={item.image} alt="Thumb" className="carousel-card__thumb" />
-                                <p className="carousel-card__desc font-medium">{item.desc}</p>
-                                <button className="carousel-card__btn">VIEW PROJECT</button>
+                                <h3 className="carousel-card__title">{slide.title}</h3>
+                                <p className="carousel-card__desc">{slide.subtitle}</p>
+                                <Link to="/gallery">
+                                    <button className="carousel-card__btn">View Gallery</button>
+                                </Link>
                             </div>
-                        </div>
+                        </article>
                     ))}
                 </div>
             </div>
 
-            <div className="carousel-dots">
-                {items.map((_, i) => (
-                    <div
-                        key={i}
-                        className={`carousel-dot ${i === activeIndex ? 'active' : ''}`}
-                        onClick={() => setActiveIndex(i)}
-                    />
-                ))}
-            </div>
+            {/* Dots */}
+            <div className="carousel-dots" id="dots" ref={dotsRef}></div>
         </section>
     )
 }
@@ -200,8 +325,8 @@ export function ConceptHome() {
                     >
                         {/* Animated Name - Responsive Text Size & Stacking */}
                         <h1 className="text-[12vw] md:text-8xl lg:text-[9vw] font-[790] tracking-tight text-white hero-title flex flex-col md:flex-row items-center">
-                            {/* DAN - Gradient + Animation (Start at 0.5s) */}
-                            <span className="text-gradient inline-block mr-4 mb-2 md:mb-0">
+                            {/* DAN - Solid Color + Animation (Start at 0.5s) */}
+                            <span className="text-[#0e4c60] drop-shadow-md inline-flex mb-2 md:mb-0 md:mr-4">
                                 {['D', 'A', 'N'].map((char, i) => (
                                     <span
                                         key={char + i}
