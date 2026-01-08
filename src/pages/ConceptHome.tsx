@@ -183,19 +183,19 @@ function CarouselSlide({ slide }: { slide: typeof SLIDES[0] }) {
                         transition={{ delay: 1, duration: 1 }}
                         className="flex flex-col items-center"
                     >
-                        <h1 className="text-6xl md:text-8xl lg:text-[10vw] leading-none font-bold tracking-tighter text-center uppercase whitespace-nowrap text-transparent bg-clip-text bg-gradient-to-r from-[#00ADB5] to-black drop-shadow-[0_0_15px_rgba(255,255,255,0.8)]">
+                        <h1 className="text-6xl md:text-8xl lg:text-[10vw] leading-none font-bold tracking-tighter text-center uppercase whitespace-nowrap text-transparent bg-clip-text bg-gradient-to-r from-[#00ADB5] to-black drop-shadow-[0_0_35px_rgba(255,255,255,0.6)]">
                             {slide.title}
                         </h1>
-                        <p className="text-xl md:text-2xl lg:text-[2vw] font-light tracking-[0.5em] text-center uppercase mt-4 text-black drop-shadow-[0_0_10px_rgba(255,255,255,0.5)]">
+                        <p className="text-xl md:text-2xl lg:text-[2vw] font-light tracking-[0.5em] text-center uppercase mt-4 text-black drop-shadow-[0_0_20px_rgba(255,255,255,0.5)]">
                             {slide.subtitle}
                         </p>
                     </motion.div>
                 ) : (
                     <div className="flex flex-col items-center overflow-hidden">
-                        <h2 className="text-5xl md:text-7xl lg:text-[8vw] font-bold tracking-tighter uppercase text-center opacity-0 group-hover/section:opacity-100 transform -translate-x-full group-hover/section:translate-x-0 transition-all duration-700 ease-out text-transparent bg-clip-text bg-gradient-to-r from-[#00ADB5] to-black drop-shadow-[0_0_15px_rgba(255,255,255,0.8)]">
+                        <h2 className="text-5xl md:text-7xl lg:text-[8vw] font-bold tracking-tighter uppercase text-center opacity-0 group-hover/section:opacity-100 transform -translate-x-full group-hover/section:translate-x-0 transition-all duration-700 ease-out text-transparent bg-clip-text bg-gradient-to-r from-[#00ADB5] to-black drop-shadow-[0_0_35px_rgba(255,255,255,0.6)]">
                             {slide.title}
                         </h2>
-                        <p className="text-lg md:text-xl lg:text-3xl font-light tracking-[0.1em] uppercase mt-4 opacity-0 group-hover/section:opacity-100 transform translate-x-full group-hover/section:translate-x-0 transition-all duration-700 delay-100 ease-out text-black drop-shadow-[0_0_10px_rgba(255,255,255,0.5)]">
+                        <p className="text-lg md:text-xl lg:text-3xl font-light tracking-[0.1em] uppercase mt-4 opacity-0 group-hover/section:opacity-100 transform translate-x-full group-hover/section:translate-x-0 transition-all duration-700 delay-100 ease-out text-black drop-shadow-[0_0_20px_rgba(255,255,255,0.5)]">
                             {slide.subtitle}
                         </p>
                     </div>
