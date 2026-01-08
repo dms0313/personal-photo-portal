@@ -1,4 +1,4 @@
-import { motion, AnimatePresence } from 'framer-motion'
+import { motion, AnimatePresence, useInView } from 'framer-motion'
 import { Link } from 'react-router-dom'
 import { useState, useEffect, useCallback, useRef } from 'react'
 import { FiChevronLeft, FiChevronRight } from 'react-icons/fi'
@@ -20,8 +20,8 @@ const SLIDES = [
         subtitle: 'Senior Photos • Business Headshots',
         images: [
             'https://ik.imagekit.io/dmsully/DS252153.jpg?updatedAt=1767658772217',
-            'https://ik.imagekit.io/dmsully/DS252112.jpg?updatedAt=1767658772112',
-            'https://ik.imagekit.io/dmsully/_MG_4017%20(1).JPG?updatedAt=1765570239624'
+            'https://ik.imagekit.io/dmsully/DS252112.jpg?updatedAt=1767658772112'
+            // Removed duplicate intro image to fix "popping" bug
         ],
     },
     {
@@ -49,7 +49,10 @@ function CarouselSlide({ slide }: { slide: typeof SLIDES[0] }) {
     const [currentImageIndex, setCurrentImageIndex] = useState(0)
     const [isTextHovered, setIsTextHovered] = useState(false)
     const [isMobileColor, setIsMobileColor] = useState(false)
-    const autoColorTimerRef = useRef<NodeJS.Timeout | null>(null)
+
+    const sectionRef = useRef<HTMLElement>(null)
+    const isInView = useInView(sectionRef, { amount: 0.3 }) // Trigger when 30% visible
+    const autoColorTimerRef = useRef<any>(null) // Use 'any' to avoid NodeJS vs Browser type conflict
 
     const nextImage = useCallback(() => {
         setCurrentImageIndex((prev) => (prev + 1) % slide.images.length)
@@ -67,28 +70,36 @@ function CarouselSlide({ slide }: { slide: typeof SLIDES[0] }) {
         img.src = slide.images[nextIndex]
     }, [currentImageIndex, slide.images])
 
+    // Carousel Auto-Advance: Only when in view
     useEffect(() => {
-        if (slide.images.length <= 1) return
+        if (!isInView || slide.images.length <= 1) return
+
         const timer = setInterval(() => {
             nextImage()
         }, 12000)
         return () => clearInterval(timer)
-    }, [slide.images.length, nextImage])
+    }, [isInView, slide.images.length, nextImage])
 
-    // Mobile Auto-Color Logic
+    // Mobile Auto-Color Logic: Only when in view
     useEffect(() => {
+        if (!isInView) {
+            setIsMobileColor(false)
+            if (autoColorTimerRef.current) clearTimeout(autoColorTimerRef.current)
+            return
+        }
+
         const startTimer = () => {
             if (autoColorTimerRef.current) clearTimeout(autoColorTimerRef.current)
             autoColorTimerRef.current = setTimeout(() => {
                 setIsMobileColor(true)
-            }, 4000) // Auto-color after 4 seconds
+            }, 4000)
         }
 
         startTimer()
         return () => {
             if (autoColorTimerRef.current) clearTimeout(autoColorTimerRef.current)
         }
-    }, [currentImageIndex])
+    }, [isInView, currentImageIndex])
 
     const handleTouchStart = () => {
         if (autoColorTimerRef.current) clearTimeout(autoColorTimerRef.current)
@@ -97,7 +108,6 @@ function CarouselSlide({ slide }: { slide: typeof SLIDES[0] }) {
 
     const handleTouchEnd = () => {
         setIsMobileColor(false)
-        // Restart timer on release
         if (autoColorTimerRef.current) clearTimeout(autoColorTimerRef.current)
         autoColorTimerRef.current = setTimeout(() => {
             setIsMobileColor(true)
@@ -106,6 +116,7 @@ function CarouselSlide({ slide }: { slide: typeof SLIDES[0] }) {
 
     return (
         <section
+            ref={sectionRef}
             className="relative h-screen min-w-full md:w-full snap-start flex flex-col items-center justify-center overflow-hidden bg-white group/section"
             onTouchStart={handleTouchStart}
             onTouchEnd={handleTouchEnd}
@@ -125,7 +136,6 @@ function CarouselSlide({ slide }: { slide: typeof SLIDES[0] }) {
                             }}
                             src={slide.images[currentImageIndex]}
                             alt={slide.title}
-                            // Logic: Color if text is hovered OR mobile color is active
                             className={`absolute inset-0 w-full h-full object-cover transition-all duration-1000 ${(isTextHovered || isMobileColor) ? 'grayscale-0' : 'grayscale'}`}
                         />
                     </AnimatePresence>
